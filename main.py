@@ -1,16 +1,16 @@
 import os
 import discord
 
-# String que tageua al usuario "usuario"
-# "<@" + str(usuario.id) + ">"
-
-# Datos administrativos del bot
-cliente = discord.Client()
-token = os.environ['TOKEN']
-
+# --- CONFIG ---
+# Ids de los rangos de moderacion que tendran permisos totales
+rangosMOD = [862332264830074891]
+emojis = ['👍', '👎', '➡️', '❌']
+# Canal donde se le enviaran comandos al bot
+canalSpamComandosID = 862383126885695489 
+# Canal donde el bot enviara sus mensajes
+canalOutputBotID = 862383158971990036
 # Como se debe invocar al bot
 prefijoBot = "!queue"
-
 # Aliases de comandos
 comandoCreate = "create"
 comandoList = "list"
@@ -19,19 +19,13 @@ comandoDelete = "delete"
 comandoAdd = "add"
 comandoRemove = "remove"
 
+# Datos administrativos del bot
+cliente = discord.Client()
+token = os.environ['TOKEN']
+
 # Lista de todas las colas
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN], mensajeEnviado)
 colas = []
-
-# Ids de los rangos de moderacion que tendran permisos totales
-rangosMOD = [862332264830074891]
-emojis = ['👍', '👎', '➡️', '❌']
-
-# Canal donde se le enviaran comandos al bot
-canalSpamComandosID = 862383126885695489 
-# Canal donde el bot enviara sus mensajes
-canalOutputBotID = 862383158971990036
-
 
 # Variables globales necesarias
 mensaje = None
@@ -47,6 +41,7 @@ def indexDeCola(nombreCola):
         if unaCola[0] == nombreCola:
             return index
         index += 1
+
 
 # Elimina una cola de la lista
 def eliminarCola(nombreCola):
