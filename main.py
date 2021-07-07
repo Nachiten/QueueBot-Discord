@@ -41,7 +41,6 @@ def indexDeCola(nombreCola):
         if unaCola[0] == nombreCola:
             return index
         index += 1
-
     print("[ERROR] No se encontro una cola que si deberia.")
 
 
@@ -56,14 +55,12 @@ def eliminarCola(nombreCola):
 
 # Agrega nuevo miembro a una cola
 def agregarACola(nombreCola, autorMensaje):
-    indexCola = indexDeCola(nombreCola)
-    colas[indexCola][1].append(autorMensaje)
+    colas[indexDeCola(nombreCola)][1].append(autorMensaje)
 
 
 # Quita un miembro de una cola
 def quitarDeCola(nombreCola, autorMensaje):
-    indexCola = indexDeCola(nombreCola)
-    colas[indexCola][1].remove(autorMensaje)
+    colas[indexDeCola(nombreCola)][1].remove(autorMensaje)
 
 
 # Verifica la cantidad de parametros de un comando
@@ -78,8 +75,7 @@ def stringEsValido(string):
 
 # Verifica existencia de una cola
 def existeCola(nombreCola):
-    nombresColas = map(lambda unaCola: unaCola[0], colas)
-    return nombreCola in nombresColas
+    return nombreCola in map(lambda unaCola: unaCola[0], colas)
 
 
 # Saber si un miembro esta en una cola dado el nombre
@@ -99,7 +95,7 @@ def generarEmbedDeCola(nombreCola):
 
     # Valores default de siguientes personas
     siguienteMiembro = "No quedan mas personas de la cola."
-    mensajeCompleto = "No hay mas miembros a continuacion."
+    miembrosAContinuacion = "No hay mas miembros a continuacion."
 
     # Si hay al menos un miembro, fijo el primero de la cola
     if len(miembrosCola) > 0:
@@ -107,17 +103,10 @@ def generarEmbedDeCola(nombreCola):
 
     # Si hay mas de un miembro, fijo los a continuacion
     if len(miembrosCola) > 1:
-        mensajeCompleto = ""
-        index = 1
+        miembrosAContinuacion = ""
 
-        for persona in miembrosCola:
-            if index == 1:
-                index += 1
-                continue
-
-            mensajeCompleto = mensajeCompleto + str(index) + ") <@" + str(
-                persona.id) + ">\n"
-            index += 1
+        for index in range(1, len(miembrosCola)):
+            miembrosAContinuacion += str(index) + ") <@" + str(miembrosCola[index].id) + ">\n"
 
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Cola " + nombreCola + ":",
@@ -127,7 +116,7 @@ def generarEmbedDeCola(nombreCola):
                            value=siguienteMiembro,
                            inline=False)
     mensajeEmbed.add_field(name="A continuacion:",
-                           value=mensajeCompleto,
+                           value=miembrosAContinuacion,
                            inline=False)
     mensajeEmbed.set_footer(
         text="Usá los emojis para reaccionar y agregarte o quitarte de la cola."
@@ -145,9 +134,6 @@ def agregarMensajeEnCola(mensaje, nombreCola):
 # Obtiene el mensaje de una cola
 def obtenerMensajeDeCola(nombreCola):
     return colas[indexDeCola(nombreCola)][2]
-
-
-
 
 
 # Description: Crea un nueva cola
@@ -192,13 +178,12 @@ async def manejarComandoList():
     if not esMod(autorMensaje):
         print("[PermissionError] El usuario " + autorMensaje.name +
               " intento usar el comando " + comandoList + ".")
-        await canalSpamComandos.send("No tenes permiso para usar este comando."
-                                     )
+        await canalSpamComandos.send("No tenes permiso para usar este comando.")
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
 
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send("Sintaxis incorrecta, uso: `" +
                                      prefijoBot + " " + comandoList +
@@ -208,8 +193,7 @@ async def manejarComandoList():
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola **" + nombreCola +
-                                     "**!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
     else:
         await enviarMensajeCola(nombreCola)
 
@@ -224,8 +208,7 @@ async def manejarComandoNext():
     if not esMod(autorMensaje):
         print("[PermissionError] El usuario " + autorMensaje.name +
               " intento usar el comando " + comandoNext + ".")
-        await canalSpamComandos.send("No tenes permiso para usar este comando."
-                                     )
+        await canalSpamComandos.send("No tenes permiso para usar este comando.")
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
@@ -376,8 +359,8 @@ async def manejarComandoHelp():
         value="!queue create unaCola | Crear una nueva cola\n"
         "!queue delete unaCola | Eliminar una cola\n"
         "!queue next unaCola | Atender el siguiente en una cola\n"
-        "!queue list unaCola | Mostrar estado de la cola\n!"
-        "queue all | Mostrar todas las colas existentes",
+        "!queue list unaCola | Mostrar estado de la cola\n"
+        "!queue all | Mostrar todas las colas existentes",
         inline=False)
     mensajeEmbed.add_field(
         name="Emojis:",
