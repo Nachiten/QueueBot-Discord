@@ -4,6 +4,7 @@ import discord
 
 from configs import Config
 
+# Configs
 rangosMOD = Config.rangosMOD
 emojis = Config.emojis
 canalSpamComandosID = Config.canalSpamComandosID
@@ -59,7 +60,7 @@ def agregarACola(nombreCola, autorMensaje):
     colas[indexCola][1].append(autorMensaje)
 
 
-# Quita un mibmro de una cola
+# Quita un miembro de una cola
 def quitarDeCola(nombreCola, autorMensaje):
     indexCola = indexDeCola(nombreCola)
     colas[indexCola][1].remove(autorMensaje)
@@ -81,7 +82,7 @@ def existeCola(nombreCola):
     return nombreCola in nombresColas
 
 
-# Saber si un miembro esta en una cola dado elnombre
+# Saber si un miembro esta en una cola dado el nombre
 def existeMiembroEnCola(miembro, nombreCola):
     return miembro in colas[indexDeCola(nombreCola)][1]
 
@@ -146,26 +147,7 @@ def obtenerMensajeDeCola(nombreCola):
     return colas[indexDeCola(nombreCola)][2]
 
 
-# Evento de inicializacion
-@cliente.event
-async def on_ready():
-    global canalOutputBot
-    global canalSpamComandos
 
-    # Cargo los canales donde el bot hablara
-    canalOutputBot = cliente.get_channel(canalOutputBotID)
-    canalSpamComandos = cliente.get_channel(canalSpamComandosID)
-
-    if canalSpamComandos == None:
-        print("[ERROR] No se pudo encontrar el canal 'canalSpamComandos'")
-    if canalOutputBot == None:
-        print("[ERROR] No se pudo encontrar el canal 'canalOutputBot'")
-
-    print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
-        cliente))
-    await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-        .format(cliente))
 
 
 # Description: Crea un nueva cola
@@ -488,6 +470,28 @@ async def eliminarMensajeCola(nombreCola):
         await mensajeDeCola.delete()
 
 
+# Evento de inicializacion
+@cliente.event
+async def on_ready():
+    global canalOutputBot
+    global canalSpamComandos
+
+    # Cargo los canales donde el bot hablara
+    canalOutputBot = cliente.get_channel(canalOutputBotID)
+    canalSpamComandos = cliente.get_channel(canalSpamComandosID)
+
+    if canalSpamComandos == None:
+        print("[ERROR] No se pudo encontrar el canal 'canalSpamComandos'")
+    if canalOutputBot == None:
+        print("[ERROR] No se pudo encontrar el canal 'canalOutputBot'")
+
+    print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
+        cliente))
+    await canalOutputBot.send(
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
+        .format(cliente))
+
+
 # Evento de mensaje recibido
 @cliente.event
 async def on_message(message):
@@ -545,6 +549,16 @@ async def on_message(message):
                                    " " + comandoHelp +
                                    "` para una lista de comandos.")
 
+async def chequearIntegridadDeMensaje(mensaje):
+    if len(mensaje.split(" ", 7)) > 3:
+        await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
+        + str(autorMensaje) + ". Por favor intente nuevamente.")
+
+
+# Averigua si un mensaje pertenece a alguna cola de mensajes
+def esAlgunaReaccionDeCola(mensaje):
+    mensajesDeColas = map(lambda unaCola : unaCola[2], colas)
+    return any(map(lambda unMensaje : unMensaje.id == mensaje.id, mensajesDeColas))
 
 # Evento de reaccion recibida
 @cliente.event
@@ -554,8 +568,10 @@ async def on_reaction_add(reaction, user):
     if user == cliente.user:
         return
 
-    # TODO | Falta checkear que se haya reaccionado al mensaje de lista enviado por el bot
-    # Se entra aca para TODA reaccion del sistema
+    # Chequeo si la reaccion es a un mensaje enviado por el bot
+    if not esAlgunaReaccionDeCola(reaction.message):
+        print("Reaccion no perteneciente al sistema.")
+        return
 
     global mensaje
     global autorMensaje
@@ -575,35 +591,31 @@ async def on_reaction_add(reaction, user):
 
     if emoji == '👍':
         mensaje += comandoAdd + " " + nombreCola
-        if len(mensaje.split(" ", 7)) > 3:
-            await canalSpamComandos.send(
-                "**[Error]** Ha ocurrido un error al procesar la solicitud de "
-                + str(autorMensaje) + ". Por favor intente nuevamente.")
+
+        await chequearIntegridadDeMensaje(mensaje)
         print("[Add] " + mensaje)
+
         await manejarComandoAdd()
     elif emoji == '👎':
         mensaje += comandoRemove + " " + nombreCola
-        if len(mensaje.split(" ", 7)) > 3:
-            await canalSpamComandos.send(
-                "**[Error]** Ha ocurrido un error al procesar la solicitud de "
-                + str(autorMensaje) + ". Por favor intente nuevamente.")
+
+        await chequearIntegridadDeMensaje(mensaje)
         print("[Remove] " + mensaje)
+
         await manejarComandoRemove()
     elif emoji == '➡️':
         mensaje += comandoNext + " " + nombreCola
-        if len(mensaje.split(" ", 7)) > 3:
-            await canalSpamComandos.send(
-                "**[Error]** Ha ocurrido un error al procesar la solicitud de "
-                + str(autorMensaje) + ". Por favor intente nuevamente.")
+
+        await chequearIntegridadDeMensaje(mensaje)
         print("[Next] " + mensaje)
+
         await manejarComandoNext()
     elif emoji == '❌':
         mensaje += comandoDelete + " " + nombreCola
-        if len(mensaje.split(" ", 7)) > 3:
-            await canalSpamComandos.send(
-                "**[Error]** Ha ocurrido un error al procesar la solicitud de "
-                + str(autorMensaje) + ". Por favor intente nuevamente.")
+
+        await chequearIntegridadDeMensaje(mensaje)
         print("[Delete] " + mensaje)
+
         await manejarComandoDelete()
     else:
         return
