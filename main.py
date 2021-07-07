@@ -1,8 +1,8 @@
 import os
 import discord
 
-# Tageua al autor del mensaje
-# "<@" + str(message.author.id) + ">"
+# String que tageua al usuario "usuario"
+# "<@" + str(usuario.id) + ">"
 
 # Como se debe invocar al bot
 prefijoBot = "!queue"
@@ -16,12 +16,14 @@ comandoAdd = "add"
 comandoRemove = "remove"
 
 # Lista de todas las colas
-# Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN])
+# Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN], mensajeEnviado)
 colas = []
 
+# Ids de los rangos de moderacion que tendran permisos totales
 ayudanteID = 862332264830074891
-emojis = ['👍', '👎', '➡️', '❌']
+# Canal donde enviará mensajes el bot
 canalGeneralID = 597165801346301982
+emojis = ['👍', '👎', '➡️', '❌']
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -87,6 +89,14 @@ def existeMiembroEnCola(miembro, nombreCola):
     return miembro in colas[indexDeCola(nombreCola)][1]
 
 
+# Verifica si un usuario tiene el rango de ayudante
+def esMod(unUsuario):
+    for unRol in unUsuario.roles:
+        if unRol.id == ayudanteID:
+            return True
+    return False
+
+
 def generarEmbedDeCola(nombreCola):
     # Lista de miembros de la cola actual (posible que sea vacia)
     miembrosCola = colas[indexDeCola(nombreCola)][1]
@@ -124,17 +134,16 @@ def generarEmbedDeCola(nombreCola):
                            value=mensajeCompleto,
                            inline=False)
     mensajeEmbed.set_footer(
-        text="Usa los emojis para reaccionar y agregarte a la cola.")
+        text="Usá los emojis para reaccionar y agregarte a la cola.")
 
     return mensajeEmbed
 
+def agregarMensajeEnCola(mensaje, nombreCola):
+    colaActual = colas[indexDeCola(nombreCola)]
+    colas[indexDeCola(nombreCola)] = (colaActual[0], colaActual[1], mensaje)
 
-# Verifica si un usuario tiene el rango de ayudante
-def esMod(unUsuario):
-    for unRol in unUsuario.roles:
-        if unRol.id == ayudanteID:
-            return True
-    return False
+def obtenerMensajeDeCola(nombreCola):
+    return colas[indexDeCola(nombreCola)][2]
 
 
 # Evento de inicializacion
@@ -163,10 +172,19 @@ async def manejarComandoCreate(canalAEnviar):
         await canalAEnviar.send("Ya existe una cola con el nombre " +
                                 nombreCola + "!")
     else:
-        colas.append((nombreCola, []))
+        colas.append((nombreCola, [], None))
         await canalAEnviar.send(tagAlAutor +
                                 " ha creado una nueva cola llamada: " +
                                 str(nombreCola) + ".")
+
+        embedCompleto = generarEmbedDeCola(nombreCola)
+
+        mensajeEnviado = await canalAEnviar.send(embed=embedCompleto)
+
+        agregarMensajeEnCola(mensajeEnviado, nombreCola)
+
+        for emoji in emojis:
+            await mensajeEnviado.add_reaction(emoji)
 
 
 # [Solo Mods]
@@ -190,11 +208,12 @@ async def manejarComandoList(canalAEnviar):
     else:
         embedCompleto = generarEmbedDeCola(nombreCola)
 
-        # botEnCanal = cliente.get_channel(597165801346301982)
-        message = await canalAEnviar.send(embed=embedCompleto)
+        mensajeEnviado = await canalAEnviar.send(embed=embedCompleto)
+
+        agregarMensajeEnCola(mensajeEnviado, nombreCola)
 
         for emoji in emojis:
-            await message.add_reaction(emoji)
+            await mensajeBot.add_reaction(emoji)
 
 
 # [Solo Mods]
@@ -229,10 +248,11 @@ async def manejarComandoNext(canalAEnviar):
             if len(colas[indexDeCola(nombreCola)][1]) >= 1:
                 siguienteAlSiguienteEnLaLista = "<@" + str(
                     colas[indexDeCola(nombreCola)][1][0].id) + ">"
-
+            
             await canalAEnviar.send(siguienteEnLaLista +
                                     " es tu turno. El siguiente en la cola es " +
                                     siguienteAlSiguienteEnLaLista + ".")
+            await actualizarQueue(nombreCola)
 
 
 # [Solo Mods]
@@ -257,6 +277,8 @@ async def manejarComandoDelete(canalAEnviar):
         eliminarCola(nombreCola)
         await canalAEnviar.send(tagAlAutor + " ha eliminado la cola " +
                                 nombreCola + ".")
+        if not mensajeBot == None:
+            await mensajeBot.delete()
 
 
 async def manejarComandoAdd(canalAEnviar):
@@ -281,7 +303,8 @@ async def manejarComandoAdd(canalAEnviar):
             await canalAEnviar.send(tagAlAutor +
                                     " ha sido agregado a la cola " +
                                     nombreCola + ".")
-
+            await actualizarQueue(nombreCola)
+            
 
 async def manejarComandoRemove(canalAEnviar):
     parametrosMensaje = mensaje.split(" ", 5)
@@ -305,6 +328,16 @@ async def manejarComandoRemove(canalAEnviar):
             await canalAEnviar.send(tagAlAutor +
                                     " ha sido quitado de la cola " +
                                     nombreCola + ".")
+            await actualizarQueue(nombreCola)
+
+
+async def actualizarQueue(nombreCola):
+    embedCompleto = generarEmbedDeCola(nombreCola)
+
+    mensajeDeCola = obtenerMensajeDeCola(nombreCola)
+
+    if not mensajeDeCola == None:
+        await mensajeDeCola.edit(embed = embedCompleto)
 
 # Evento de mensaje recibido
 @cliente.event
@@ -352,12 +385,16 @@ async def on_message(message):
         await manejarComandoRemove(canalGeneral)
 
 
+# Evento de reaccion recibida
 @cliente.event
 async def on_reaction_add(reaction, user):
 
     # No hago nada con cualquier reaccion hecha por el bot
     if user == cliente.user:
         return
+
+    # TODO | Falta checkear que se haya reaccionado al mensaje de lista enviado por el bot
+    # Se entra aca para TODA reaccion del sistema
 
     global mensaje
     global autorMensaje
@@ -371,6 +408,9 @@ async def on_reaction_add(reaction, user):
     nombreCola = reaction.message.embeds[0].title.split(" ", 3)[2]
     canalGeneral = cliente.get_channel(canalGeneralID)
     emoji = reaction.emoji
+
+    # Remuevo la reaccion generada por el usuario
+    await reaction.remove(user)
 
     if emoji == '👍':
         mensaje += comandoAdd + " " + nombreCola
@@ -386,9 +426,6 @@ async def on_reaction_add(reaction, user):
         await manejarComandoDelete(canalGeneral)
     else:
         return
-
-    # Remuevo la reaccion generada por el usuario
-    await reaction.remove(user)
 
 
 cliente.run(token)
