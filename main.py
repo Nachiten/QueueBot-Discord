@@ -1,23 +1,19 @@
 import os
 import discord
 
-# --- CONFIG ---
-# Ids de los rangos de moderacion que tendran permisos totales
-rangosMOD = [862332264830074891]
-emojis = ['👍', '👎', '➡️', '❌']
-# Canal donde se le enviaran comandos al bot
-canalSpamComandosID = 862383126885695489 
-# Canal donde el bot enviara sus mensajes
-canalOutputBotID = 862383158971990036
-# Como se debe invocar al bot
-prefijoBot = "!queue"
-# Aliases de comandos
-comandoCreate = "create"
-comandoList = "list"
-comandoNext = "next"
-comandoDelete = "delete"
-comandoAdd = "add"
-comandoRemove = "remove"
+from configs import Config
+
+rangosMOD = Config.rangosMOD
+emojis = Config.emojis
+canalSpamComandosID = Config.canalSpamComandosID
+canalOutputBotID = Config.canalOutputBotID
+prefijoBot = Config.prefijoBot
+comandoCreate = Config.comandoCreate
+comandoList = Config.comandoList
+comandoNext = Config.comandoNext
+comandoDelete = Config.comandoDelete
+comandoAdd = Config.comandoAdd
+comandoRemove = Config.comandoRemove
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -162,7 +158,8 @@ async def on_ready():
     print('El bot ha sido cargado como el usurio: {0.user}'.format(cliente))
 
 
-# [Solo Mods]
+# Description: Crea un nueva cola
+# Access: Only Mods
 async def manejarComandoCreate():
     global canalSpamComandos
 
@@ -191,7 +188,8 @@ async def manejarComandoCreate():
         await enviarMensajeCola(nombreCola)
 
 
-# [Solo Mods]
+# Description: Muestra una cola por output-bot
+# Access: Only Mods
 async def manejarComandoList():
     global canalSpamComandos
 
@@ -215,7 +213,8 @@ async def manejarComandoList():
         await enviarMensajeCola(nombreCola)
 
 
-# [Solo Mods]
+# Description: Atender siguiente persona en una cola
+# Access: Only Mods
 async def manejarComandoNext():
     global canalSpamComandos
 
@@ -257,7 +256,8 @@ async def manejarComandoNext():
             await actualizarMensajeCola(nombreCola)
 
 
-# [Solo Mods]
+# Description: Eliminar una cola
+# Access: Only Mods
 async def manejarComandoDelete():
     global canalSpamComandos
 
@@ -283,7 +283,9 @@ async def manejarComandoDelete():
                                 nombreCola + ".")
         await eliminarMensajeCola(nombreCola)
 
-# [Todos]
+
+# Description: Agregar una persona a una cola
+# Access: Everyone
 async def manejarComandoAdd():
     global canalSpamComandos
 
@@ -310,7 +312,9 @@ async def manejarComandoAdd():
                                     nombreCola + ".")
             await actualizarMensajeCola(nombreCola)
 
-# [Todos]
+
+# Description: Eliminar una persona de una cola
+# Access: Everyone
 async def manejarComandoRemove():
     global canalSpamComandos
 
