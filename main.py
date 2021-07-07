@@ -12,7 +12,8 @@ prefijoBot = "!queue"
 colas = []
 
 ayudanteID = 862332264830074891
-
+emojis = ['👍', '👎', '➡️', '❌']
+canalGeneralID = 597165801346301982
 
 # Obtiene el index de una cola dentro del array de estas
 def indexDeCola(nombreCola):
@@ -130,6 +131,7 @@ token = os.environ['TOKEN']
 async def on_ready():
     print('El bot ha sido cargado como el usurio: {0.user}'.format(cliente))
 
+# async def manejarCrear(mensaje):
 
 # Evento de mensaje recibido
 @cliente.event
@@ -220,7 +222,12 @@ async def on_message(message):
             await message.channel.send("No existe la cola " + nombreCola + "!")
         else:
             embedCompleto = generarEmbedDeCola(nombreCola)
-            await message.channel.send(embed=embedCompleto)
+
+            # botEnCanal = cliente.get_channel(597165801346301982)
+            message = await message.channel.send(embed=embedCompleto)
+
+            for emoji in emojis:
+                await message.add_reaction(emoji)
 
     # Comando para obtener siguiente de la cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + ' next'):
@@ -306,5 +313,32 @@ async def on_message(message):
             await message.channel.send(tagAlAutor + " ha eliminado la cola " +
                                        nombreCola + ".")
 
+
+@cliente.event
+async def on_reaction_add(reaction, user):
+
+    # No hago nada con cualquier reaccion hecha por el bot
+    if user == cliente.user:
+        return
+
+    # Variables necesarias
+    nombreCola = reaction.message.embeds[0].title.split(" ", 3)[2]
+    canalGeneral = cliente.get_channel(canalGeneralID)
+    emoji = reaction.emoji
+    tagAlAutor = "<@" + str(user.id) + ">"
+
+    # Remuevo la reaccion generada por el usuario
+    await reaction.remove(user)
+
+    if emoji == '👍':
+        await canalGeneral.send("El usuario " + tagAlAutor + " quiere unirse a la cola " + nombreCola + ".")
+    elif emoji == '👎':
+        await canalGeneral.send("El usuario " + tagAlAutor + " quiere darse de baja de la cola " + nombreCola + ".")
+    elif emoji == '➡️':
+        await canalGeneral.send("El usuario " + tagAlAutor + " quiere ver el siguiente en la cola " + nombreCola + ".")
+    elif emoji == '❌':
+        await canalGeneral.send("El usuario " + tagAlAutor + " quiere borrar la cola " + nombreCola + ".")
+    else:
+        return
 
 cliente.run(token)
