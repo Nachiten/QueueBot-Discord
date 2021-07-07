@@ -50,6 +50,7 @@ def existeCola(nombreCola):
     return nombreCola in nombresColas
 
 
+# Saber si un miembro esta en una cola dado elnombre
 def existeMiembroEnCola(miembro, nombreCola):
     return miembro in colas[indexDeCola(nombreCola)][1]
 
@@ -69,13 +70,13 @@ def generarEmbedDeCola(nombreCola):
     # Si hay mas de un miembro, fijo los a continuacion
     if len(miembrosCola) > 1:
         mensajeCompleto = ""
-
         index = 1
 
         for persona in miembrosCola:
             if index == 1:
                 index += 1
                 continue
+
             mensajeCompleto = mensajeCompleto + str(index) + ") <@" + str(
                 persona.id) + ">\n"
             index += 1
@@ -115,16 +116,12 @@ async def on_message(message):
     # Variables utiles
     mensaje = message.content
     autorMensaje = message.author
-    tagAlAutor = "<@" + str(message.author.id) + ">"
+
+    tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
     # Cancelo la operacion si el mensaje es enviado por el mismo bot
     if autorMensaje == cliente.user:
         return
-
-    # Comando para testear
-    if mensaje.startswith(prefijoBot + ' test'):
-        await message.channel.send(tagAlAutor +
-                                   " La prueba fue satisfactoria!")
 
     # Comando para crear nueva cola
     if mensaje.startswith(prefijoBot + ' create'):
