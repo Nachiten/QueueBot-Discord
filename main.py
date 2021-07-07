@@ -11,6 +11,8 @@ prefijoBot = "!queue"
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN])
 colas = []
 
+ayudanteID = 862332264830074891
+
 
 # Obtiene el index de una cola dentro del array de estas
 def indexDeCola(nombreCola):
@@ -22,10 +24,23 @@ def indexDeCola(nombreCola):
         index += 1
 
 
+def eliminarCola(nombreCola):
+    for unaCola in colas:
+        if unaCola[0] == nombreCola:
+            colas.remove(unaCola)
+            return
+    print("[ERROR] No fue encontrada la cola que deberia existir")
+
+
 # Agrega nuevo miembro a una cola
 def agregarACola(nombreCola, autorMensaje):
     indexCola = indexDeCola(nombreCola)
     colas[indexCola][1].append(autorMensaje)
+
+
+def quitarDeCola(nombreCola, autorMensaje):
+    indexCola = indexDeCola(nombreCola)
+    colas[indexCola][1].remove(autorMensaje)
 
 
 # Verifica la cantidad de parametros de un comando
@@ -97,6 +112,14 @@ def generarEmbedDeCola(nombreCola):
     return mensajeEmbed
 
 
+# Verifica si un usuario tiene el rango de ayudante
+def esMod(unUsuario):
+    for unRol in unUsuario.roles:
+        if unRol.id == ayudanteID:
+            return True
+    return False
+
+
 # Datos administrativos del bot
 cliente = discord.Client()
 token = os.environ['TOKEN']
@@ -123,9 +146,14 @@ async def on_message(message):
     if autorMensaje == cliente.user:
         return
 
-    # Comando para crear nueva cola
+    # Comando para crear nueva cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + ' create'):
         parametrosMensaje = mensaje.split(" ", 5)
+
+        if not esMod(message.author):
+            await message.channel.send(
+                tagAlAutor + "No tenes permiso para usar este comando.")
+            return
 
         # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
         if not cantidadDeParametrosEs(3, parametrosMensaje):
@@ -170,8 +198,13 @@ async def on_message(message):
                                            " ha sido agregado a la cola " +
                                            nombreCola + ".")
 
-    # Comando para listar una cola
+    # Comando para listar una cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + ' list'):
+
+        if not esMod(message.author):
+            await message.channel.send(
+                tagAlAutor + "No tenes permiso para usar este comando.")
+            return
 
         parametrosMensaje = mensaje.split(" ", 5)
 
@@ -189,17 +222,89 @@ async def on_message(message):
             embedCompleto = generarEmbedDeCola(nombreCola)
             await message.channel.send(embed=embedCompleto)
 
-    # Comando para obtener siguiente de la cola
+    # Comando para obtener siguiente de la cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + ' next'):
-        pass
+        parametrosMensaje = mensaje.split(" ", 5)
+
+        if not esMod(message.author):
+            await message.channel.send(
+                tagAlAutor + "No tenes permiso para usar este comando.")
+            return
+
+        # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+        if not cantidadDeParametrosEs(3, parametrosMensaje):
+            await message.channel.send(
+                "Sintaxis incorrecta, uso: !queue next nombreCola")
+            return
+
+        nombreCola = parametrosMensaje[2]
+
+        if len(colas[indexDeCola(nombreCola)][1]) == 0:
+            await message.channel.send("No quedan miembros en la cola " +
+                                       nombreCola + ".")
+            return
+        else:
+            # Calculo los siguientes para printearlos
+            siguienteEnLaLista = "<@" + str(colas[indexDeCola(nombreCola)][1].pop(0).id) + ">"
+            siguienteAlSiguienteEnLaLista = "{Nadie}"
+
+            if len(colas[indexDeCola(nombreCola)][1]) >= 1:
+                siguienteAlSiguienteEnLaLista = "<@" + str(
+                    colas[indexDeCola(nombreCola)][1][0].id) + ">"
+
+            await message.channel.send(siguienteEnLaLista + 
+            " es tu turno. El siguiente en la cola es " + 
+            siguienteAlSiguienteEnLaLista + ".")
 
     # Comando para quitarse a uno mismo de una cola
     if mensaje.startswith(prefijoBot + ' remove'):
-        pass
+        parametrosMensaje = mensaje.split(" ", 5)
 
-    # Comando para eliminar una cola
+        # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+        if not cantidadDeParametrosEs(3, parametrosMensaje):
+            await message.channel.send(
+                "Sintaxis incorrecta, uso: !queue remove nombreCola")
+            return
+
+        nombreCola = parametrosMensaje[2]
+
+        if not existeCola(nombreCola):
+            await message.channel.send("No existe la cola " + nombreCola + "!")
+        else:
+            if not existeMiembroEnCola(autorMensaje, nombreCola):
+                await message.channel.send(tagAlAutor +
+                                           " No estas en la cola " +
+                                           nombreCola + "!")
+            else:
+                quitarDeCola(nombreCola, autorMensaje)
+                await message.channel.send(tagAlAutor +
+                                           " ha sido quitado de la cola " +
+                                           nombreCola + ".")
+
+    # Comando para eliminar una cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + ' delete'):
-        pass
+
+        if not esMod(message.author):
+            await message.channel.send(
+                "No tenes permiso para usar este comando.")
+            return
+
+        parametrosMensaje = mensaje.split(" ", 5)
+
+        # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+        if not cantidadDeParametrosEs(3, parametrosMensaje):
+            await message.channel.send(
+                "Sintaxis incorrecta, uso: !queue delete nombreCola")
+            return
+
+        nombreCola = parametrosMensaje[2]
+
+        if not existeCola(nombreCola):
+            await message.channel.send("No existe la cola " + nombreCola + "!")
+        else:
+            eliminarCola(nombreCola)
+            await message.channel.send(tagAlAutor + " ha eliminado la cola " +
+                                       nombreCola + ".")
 
 
 cliente.run(token)
