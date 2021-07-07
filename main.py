@@ -7,6 +7,14 @@ import discord
 # Como se debe invocar al bot
 prefijoBot = "!queue"
 
+# Aliases de comandos
+comandoCreate = "create"
+comandoList = "list"
+comandoNext = "next"
+comandoDelete = "delete"
+comandoAdd = "add"
+comandoRemove = "remove"
+
 # Lista de todas las colas
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN])
 colas = []
@@ -14,6 +22,14 @@ colas = []
 ayudanteID = 862332264830074891
 emojis = ['👍', '👎', '➡️', '❌']
 canalGeneralID = 597165801346301982
+
+# Datos administrativos del bot
+cliente = discord.Client()
+token = os.environ['TOKEN']
+
+mensaje = None
+autorMensaje = None
+tagAlAutor = None
 
 # Obtiene el index de una cola dentro del array de estas
 def indexDeCola(nombreCola):
@@ -121,76 +137,42 @@ def esMod(unUsuario):
     return False
 
 
-# Datos administrativos del bot
-cliente = discord.Client()
-token = os.environ['TOKEN']
-
-
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
     print('El bot ha sido cargado como el usurio: {0.user}'.format(cliente))
 
-mensaje = None
-autorMensaje = None
-tagAlAutor = None
 
 # [Solo Mods]
 async def manejarComandoCreate(canalAEnviar):
     parametrosMensaje = mensaje.split(" ", 5)
 
     if not esMod(autorMensaje):
-        await canalAEnviar.send(
-            tagAlAutor + "No tenes permiso para usar este comando.")
+        await canalAEnviar.send("No tenes permiso para usar este comando.")
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalAEnviar.send(
-            "Sintaxis incorrecta, uso: !queue create nombreCola")
+            "Sintaxis incorrecta, uso: !queue "+ comandoCreate +" nombreCola")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if (existeCola(nombreCola)):
         await canalAEnviar.send("Ya existe una cola con el nombre " +
-                                    nombreCola + "!")
+                                nombreCola + "!")
     else:
         colas.append((nombreCola, []))
         await canalAEnviar.send(tagAlAutor +
-                                    " ha creado una nueva cola llamada: " +
-                                    str(nombreCola) + ".")
+                                " ha creado una nueva cola llamada: " +
+                                str(nombreCola) + ".")
 
-
-async def manejarComandoAdd(canalAEnviar):
-    parametrosMensaje = mensaje.split(" ", 5)
-
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
-    if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalAEnviar.send(
-            "Sintaxis incorrecta, uso: !queue add nombreCola")
-        return
-
-    nombreCola = parametrosMensaje[2]
-
-    if not existeCola(nombreCola):
-        await canalAEnviar.send("No existe la cola " + nombreCola + "!")
-    else:
-        if existeMiembroEnCola(autorMensaje, nombreCola):
-            await canalAEnviar.send(tagAlAutor +
-                                        " Ya estas en la cola " +
-                                        nombreCola + "!")
-        else:
-            agregarACola(nombreCola, autorMensaje)
-            await canalAEnviar.send(tagAlAutor +
-                                        " ha sido agregado a la cola " +
-                                        nombreCola + ".")
 
 # [Solo Mods]
 async def manejarComandoList(canalAEnviar):
     if not esMod(autorMensaje):
-        await canalAEnviar.send(
-            tagAlAutor + "No tenes permiso para usar este comando.")
+        await canalAEnviar.send("No tenes permiso para usar este comando.")
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -214,13 +196,13 @@ async def manejarComandoList(canalAEnviar):
         for emoji in emojis:
             await message.add_reaction(emoji)
 
+
 # [Solo Mods]
 async def manejarComandoNext(canalAEnviar):
     parametrosMensaje = mensaje.split(" ", 5)
 
     if not esMod(autorMensaje):
-        await canalAEnviar.send(
-            tagAlAutor + "No tenes permiso para usar este comando.")
+        await canalAEnviar.send("No tenes permiso para usar este comando.")
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
@@ -231,53 +213,32 @@ async def manejarComandoNext(canalAEnviar):
 
     nombreCola = parametrosMensaje[2]
 
-    if len(colas[indexDeCola(nombreCola)][1]) == 0:
-        await canalAEnviar.send("No quedan miembros en la cola " +
-                                    nombreCola + ".")
-        return
-    else:
-        # Calculo los siguientes para printearlos
-        siguienteEnLaLista = "<@" + str(colas[indexDeCola(nombreCola)][1].pop(0).id) + ">"
-        siguienteAlSiguienteEnLaLista = "{Nadie}"
-
-        if len(colas[indexDeCola(nombreCola)][1]) >= 1:
-            siguienteAlSiguienteEnLaLista = "<@" + str(
-                colas[indexDeCola(nombreCola)][1][0].id) + ">"
-
-        await canalAEnviar.send(siguienteEnLaLista + 
-        " es tu turno. El siguiente en la cola es " + 
-        siguienteAlSiguienteEnLaLista + ".")
-
-
-async def manejarComandoRemove(canalAEnviar):
-    parametrosMensaje = mensaje.split(" ", 5)
-
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
-    if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalAEnviar.send(
-            "Sintaxis incorrecta, uso: !queue remove nombreCola")
-        return
-
-    nombreCola = parametrosMensaje[2]
-
     if not existeCola(nombreCola):
         await canalAEnviar.send("No existe la cola " + nombreCola + "!")
     else:
-        if not existeMiembroEnCola(autorMensaje, nombreCola):
-            await canalAEnviar.send(tagAlAutor +
-                                        " No estas en la cola " +
-                                        nombreCola + "!")
+        if len(colas[indexDeCola(nombreCola)][1]) == 0:
+            await canalAEnviar.send("No quedan miembros en la cola " + nombreCola +
+                                    ".")
+            return
         else:
-            quitarDeCola(nombreCola, autorMensaje)
-            await canalAEnviar.send(tagAlAutor +
-                                        " ha sido quitado de la cola " +
-                                        nombreCola + ".")
+            # Calculo los siguientes para printearlos
+            siguienteEnLaLista = "<@" + str(
+                colas[indexDeCola(nombreCola)][1].pop(0).id) + ">"
+            siguienteAlSiguienteEnLaLista = "{Nadie}"
+
+            if len(colas[indexDeCola(nombreCola)][1]) >= 1:
+                siguienteAlSiguienteEnLaLista = "<@" + str(
+                    colas[indexDeCola(nombreCola)][1][0].id) + ">"
+
+            await canalAEnviar.send(siguienteEnLaLista +
+                                    " es tu turno. El siguiente en la cola es " +
+                                    siguienteAlSiguienteEnLaLista + ".")
+
 
 # [Solo Mods]
 async def manejarComandoDelete(canalAEnviar):
     if not esMod(autorMensaje):
-        await canalAEnviar.send(
-            "No tenes permiso para usar este comando.")
+        await canalAEnviar.send("No tenes permiso para usar este comando.")
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -295,8 +256,55 @@ async def manejarComandoDelete(canalAEnviar):
     else:
         eliminarCola(nombreCola)
         await canalAEnviar.send(tagAlAutor + " ha eliminado la cola " +
+                                nombreCola + ".")
+
+
+async def manejarComandoAdd(canalAEnviar):
+    parametrosMensaje = mensaje.split(" ", 5)
+
+    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    if not cantidadDeParametrosEs(3, parametrosMensaje):
+        await canalAEnviar.send(
+            "Sintaxis incorrecta, uso: !queue add nombreCola")
+        return
+
+    nombreCola = parametrosMensaje[2]
+
+    if not existeCola(nombreCola):
+        await canalAEnviar.send("No existe la cola " + nombreCola + "!")
+    else:
+        if existeMiembroEnCola(autorMensaje, nombreCola):
+            await canalAEnviar.send(tagAlAutor + " Ya estas en la cola " +
+                                    nombreCola + "!")
+        else:
+            agregarACola(nombreCola, autorMensaje)
+            await canalAEnviar.send(tagAlAutor +
+                                    " ha sido agregado a la cola " +
                                     nombreCola + ".")
 
+
+async def manejarComandoRemove(canalAEnviar):
+    parametrosMensaje = mensaje.split(" ", 5)
+
+    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    if not cantidadDeParametrosEs(3, parametrosMensaje):
+        await canalAEnviar.send(
+            "Sintaxis incorrecta, uso: !queue remove nombreCola")
+        return
+
+    nombreCola = parametrosMensaje[2]
+
+    if not existeCola(nombreCola):
+        await canalAEnviar.send("No existe la cola " + nombreCola + "!")
+    else:
+        if not existeMiembroEnCola(autorMensaje, nombreCola):
+            await canalAEnviar.send(tagAlAutor + " No estas en la cola " +
+                                    nombreCola + "!")
+        else:
+            quitarDeCola(nombreCola, autorMensaje)
+            await canalAEnviar.send(tagAlAutor +
+                                    " ha sido quitado de la cola " +
+                                    nombreCola + ".")
 
 # Evento de mensaje recibido
 @cliente.event
@@ -320,30 +328,30 @@ async def on_message(message):
     canalGeneral = cliente.get_channel(canalGeneralID)
 
     # Comando para crear nueva cola [ONLY MODS]
-    if mensaje.startswith(prefijoBot + ' create'):
+    if mensaje.startswith(prefijoBot + " " + comandoCreate):
         await manejarComandoCreate(canalGeneral)
 
     # Comando para listar una cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + ' list'):
+    elif mensaje.startswith(prefijoBot + " " + comandoList):
         await manejarComandoList(canalGeneral)
 
-    # Comando para eliminar una cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + ' delete'):
-        await manejarComandoDelete(canalGeneral)
-        
     # Comando para obtener siguiente de la cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + ' next'):
+    elif mensaje.startswith(prefijoBot + " " + comandoNext):
         await manejarComandoNext(canalGeneral)
 
+    # Comando para eliminar una cola [ONLY MODS]
+    elif mensaje.startswith(prefijoBot + " " + comandoDelete):
+        await manejarComandoDelete(canalGeneral)
+
     # Comando para agregarse a una cola
-    elif mensaje.startswith(prefijoBot + ' add'):
+    elif mensaje.startswith(prefijoBot + " " + comandoAdd):
         await manejarComandoAdd(canalGeneral)
 
     # Comando para quitarse a uno mismo de una cola
-    elif mensaje.startswith(prefijoBot + ' remove'):
+    elif mensaje.startswith(prefijoBot + " " + comandoRemove):
         await manejarComandoRemove(canalGeneral)
 
-    
+
 @cliente.event
 async def on_reaction_add(reaction, user):
 
@@ -351,36 +359,36 @@ async def on_reaction_add(reaction, user):
     if user == cliente.user:
         return
 
+    global mensaje
+    global autorMensaje
+    global tagAlAutor
+
+    mensaje = prefijoBot + " "
+    autorMensaje = user
+    tagAlAutor = "<@" + str(user.id) + ">"
+
     # Variables necesarias
     nombreCola = reaction.message.embeds[0].title.split(" ", 3)[2]
     canalGeneral = cliente.get_channel(canalGeneralID)
     emoji = reaction.emoji
 
-    global mensaje
-    global autorMensaje
-    global tagAlAutor
-
-    mensaje = "!queue "
-    autorMensaje = user
-    tagAlAutor = "<@" + str(user.id) + ">"
-
     if emoji == '👍':
-        mensaje += "add " + nombreCola
+        mensaje += comandoAdd + " " + nombreCola
         await manejarComandoAdd(canalGeneral)
     elif emoji == '👎':
-        mensaje += "remove " + nombreCola
-        print(mensaje)
+        mensaje += comandoRemove + " " + nombreCola
         await manejarComandoRemove(canalGeneral)
     elif emoji == '➡️':
-        mensaje += "next " + nombreCola
+        mensaje += comandoNext + " " + nombreCola
         await manejarComandoNext(canalGeneral)
     elif emoji == '❌':
-        mensaje += "delete " + nombreCola
+        mensaje += comandoDelete + " " + nombreCola
         await manejarComandoDelete(canalGeneral)
     else:
         return
 
     # Remuevo la reaccion generada por el usuario
     await reaction.remove(user)
+
 
 cliente.run(token)
