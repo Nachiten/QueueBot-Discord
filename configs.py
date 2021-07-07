@@ -16,3 +16,5 @@ class Config:
     comandoDelete = "delete"
     comandoAdd = "add"
     comandoRemove = "remove"
+    comandoHelp = "help"
+    comandoAll = "all"

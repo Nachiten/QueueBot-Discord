@@ -1,4 +1,5 @@
 import os
+
 import discord
 
 from configs import Config
@@ -14,6 +15,8 @@ comandoNext = Config.comandoNext
 comandoDelete = Config.comandoDelete
 comandoAdd = Config.comandoAdd
 comandoRemove = Config.comandoRemove
+comandoHelp = Config.comandoHelp
+comandoAll = Config.comandoAll
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -37,6 +40,8 @@ def indexDeCola(nombreCola):
         if unaCola[0] == nombreCola:
             return index
         index += 1
+
+    print("[ERROR] No se encontro una cola que si deberia.")
 
 
 # Elimina una cola de la lista
@@ -72,7 +77,7 @@ def stringEsValido(string):
 
 # Verifica existencia de una cola
 def existeCola(nombreCola):
-    nombresColas = map(lambda unaCola : unaCola[0], colas)
+    nombresColas = map(lambda unaCola: unaCola[0], colas)
     return nombreCola in nombresColas
 
 
@@ -87,6 +92,7 @@ def esMod(unUsuario):
         if unRol.id in rangosMOD:
             return True
     return False
+
 
 # Genera el mensaje embed a enviar
 def generarEmbedDeCola(nombreCola):
@@ -116,7 +122,7 @@ def generarEmbedDeCola(nombreCola):
             index += 1
 
     # Creacion de mensaje embed
-    mensajeEmbed = discord.Embed(title="Cola Actual: " + nombreCola,
+    mensajeEmbed = discord.Embed(title="Cola " + nombreCola + ":",
                                  color=discord.Color.purple())
     mensajeEmbed.set_thumbnail(url="https://i.imgur.com/FU1z6dq.png")
     mensajeEmbed.add_field(name="Siguiente turno:",
@@ -126,14 +132,17 @@ def generarEmbedDeCola(nombreCola):
                            value=mensajeCompleto,
                            inline=False)
     mensajeEmbed.set_footer(
-        text="Usá los emojis para reaccionar y agregarte a la cola.")
+        text="Usá los emojis para reaccionar y agregarte o quitarte de la cola."
+    )
 
     return mensajeEmbed
+
 
 # Agrega un mensaje en una cola
 def agregarMensajeEnCola(mensaje, nombreCola):
     colaActual = colas[indexDeCola(nombreCola)]
     colas[indexDeCola(nombreCola)] = (colaActual[0], colaActual[1], mensaje)
+
 
 # Obtiene el mensaje de una cola
 def obtenerMensajeDeCola(nombreCola):
@@ -154,8 +163,10 @@ async def on_ready():
         print("[ERROR] No se pudo encontrar el canal 'canalSpamComandos'")
     if canalOutputBot == None:
         print("[ERROR] No se pudo encontrar el canal 'canalOutputBot'")
-    
-    print('El bot ha sido cargado como el usurio: {0.user}'.format(cliente))
+
+    print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
+        cliente))
+    await canalOutputBot.send("El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
 # Description: Crea un nueva cola
@@ -166,25 +177,27 @@ async def manejarComandoCreate():
     parametrosMensaje = mensaje.split(" ", 5)
 
     if not esMod(autorMensaje):
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoCreate + ".")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send("Sintaxis incorrecta, uso: !queue " +
-                                comandoCreate + " nombreCola")
+        await canalSpamComandos.send("Sintaxis incorrecta, uso: `"  + prefijoBot + " " + comandoCreate + " nombreCola`")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if (existeCola(nombreCola)):
-        await canalSpamComandos.send("Ya existe una cola con el nombre " +
-                                nombreCola + "!")
+        await canalSpamComandos.send("Ya existe una cola con el nombre **" +
+                                     nombreCola + "**!")
     else:
         colas.append((nombreCola, [], None))
         await canalSpamComandos.send(tagAlAutor +
-                                " ha creado una nueva cola llamada: " +
-                                str(nombreCola) + ".")
+                                     " ha creado una nueva cola llamada: **" +
+                                     str(nombreCola) + "**.")
         await enviarMensajeCola(nombreCola)
 
 
@@ -194,7 +207,10 @@ async def manejarComandoList():
     global canalSpamComandos
 
     if not esMod(autorMensaje):
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoList + ".")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -202,13 +218,13 @@ async def manejarComandoList():
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: !queue list nombreCola")
+            "Sintaxis incorrecta, uso: `"  + prefijoBot + " " + comandoList + " nombreCola`")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
     else:
         await enviarMensajeCola(nombreCola)
 
@@ -221,38 +237,38 @@ async def manejarComandoNext():
     parametrosMensaje = mensaje.split(" ", 5)
 
     if not esMod(autorMensaje):
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoNext + ".")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: !queue next nombreCola")
+            "Sintaxis incorrecta, uso: `"  + prefijoBot + " " + comandoNext + " nombreCola`.")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
     else:
         if len(colas[indexDeCola(nombreCola)][1]) == 0:
-            await canalSpamComandos.send("No quedan miembros en la cola " +
-                                    nombreCola + ".")
+            await canalOutputBot.send("No quedan miembros en la cola **" + nombreCola + "**.")
             return
         else:
             # Calculo los siguientes para printearlos
             siguienteEnLaLista = "<@" + str(
                 colas[indexDeCola(nombreCola)][1].pop(0).id) + ">"
-            siguienteAlSiguienteEnLaLista = "{Nadie}"
+            siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
 
             if len(colas[indexDeCola(nombreCola)][1]) >= 1:
-                siguienteAlSiguienteEnLaLista = "<@" + str(
-                    colas[indexDeCola(nombreCola)][1][0].id) + ">"
+                siguienteAlSiguienteEnLaLista = " El siguiente en la lista es: <@" + str(
+                    colas[indexDeCola(nombreCola)][1][0].id) + ">."
 
-            await canalOutputBot.send(
-                siguienteEnLaLista +
-                " es tu turno. El siguiente en la cola es " +
-                siguienteAlSiguienteEnLaLista + ".")
+            await canalOutputBot.send(siguienteEnLaLista +
+                " es tu turno en la cola **" + nombreCola + "**." + siguienteAlSiguienteEnLaLista)
             await actualizarMensajeCola(nombreCola)
 
 
@@ -261,27 +277,30 @@ async def manejarComandoNext():
 async def manejarComandoDelete():
     global canalSpamComandos
 
+    # Verificacion de mod
     if not esMod(autorMensaje):
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoDelete + ".")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
 
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: !queue delete nombreCola")
+            "Sintaxis incorrecta, uso: `"  + prefijoBot + " " + comandoDelete + " nombreCola`.")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
     else:
-        eliminarCola(nombreCola)
-        await canalSpamComandos.send(tagAlAutor + " ha eliminado la cola " +
-                                nombreCola + ".")
         await eliminarMensajeCola(nombreCola)
+        eliminarCola(nombreCola)
+        await canalSpamComandos.send(tagAlAutor + " ha eliminado la cola **" + nombreCola + "**.")
 
 
 # Description: Agregar una persona a una cola
@@ -291,10 +310,9 @@ async def manejarComandoAdd():
 
     parametrosMensaje = mensaje.split(" ", 5)
 
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: !queue add nombreCola")
+        await canalSpamComandos.send("Sintaxis incorrecta, uso: `"  + prefijoBot + " " +  comandoAdd + " nombreCola`.")
         return
 
     nombreCola = parametrosMensaje[2]
@@ -303,13 +321,13 @@ async def manejarComandoAdd():
         await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
     else:
         if existeMiembroEnCola(autorMensaje, nombreCola):
-            await canalSpamComandos.send(tagAlAutor + " Ya estas en la cola " +
-                                    nombreCola + "!")
+            await canalSpamComandos.send(tagAlAutor + " Ya estas en la cola **" +
+                                         nombreCola + "**!")
         else:
             agregarACola(nombreCola, autorMensaje)
             await canalSpamComandos.send(tagAlAutor +
-                                    " ha sido agregado a la cola " +
-                                    nombreCola + ".")
+                                         " ha sido agregado a la cola **" +
+                                         nombreCola + "**.")
             await actualizarMensajeCola(nombreCola)
 
 
@@ -320,26 +338,89 @@ async def manejarComandoRemove():
 
     parametrosMensaje = mensaje.split(" ", 5)
 
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: !queue remove nombreCola")
+            "Sintaxis incorrecta, uso: `"  + prefijoBot + " " + comandoRemove +  " + nombreCola`.")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
     else:
         if not existeMiembroEnCola(autorMensaje, nombreCola):
-            await canalSpamComandos.send(tagAlAutor + " No estas en la cola " +
-                                    nombreCola + "!")
+            await canalSpamComandos.send(tagAlAutor + " No estas en la cola **" +
+                                         nombreCola + "**!")
         else:
             quitarDeCola(nombreCola, autorMensaje)
             await canalSpamComandos.send(tagAlAutor +
-                                    " ha sido quitado de la cola " +
-                                    nombreCola + ".")
+                                         " ha sido quitado de la cola **" +
+                                         nombreCola + "**.")
             await actualizarMensajeCola(nombreCola)
+
+
+# Description: Eliminar una persona de una cola
+# Access: Everyone
+async def manejarComandoHelp():
+    # Creacion de mensaje embed
+    mensajeEmbed = discord.Embed(title="Lista de comandos:",
+                                 color=discord.Color.purple())
+    mensajeEmbed.set_thumbnail(url="https://i.imgur.com/FU1z6dq.png")
+    mensajeEmbed.add_field(
+        name="Comandos para todos:",
+        value=
+        "!queue add unaCola | Agregarse a una cola\n!queue remove unaCola | Quitarse de una cola",
+        inline=False)
+    mensajeEmbed.add_field(
+        name="Comandos para Ayudantes:",
+        value="!queue create unaCola | Crear una nueva cola\n"
+        "!queue delete unaCola | Eliminar una cola\n"
+        "!queue next unaCola | Atender el siguiente en una cola\n"
+        "!queue list unaCola | Mostrar estado de la cola\n!"
+        "queue all | Mostrar todas las colas existentes",
+        inline=False)
+    mensajeEmbed.add_field(
+        name="Emojis:",
+        value="[👍] add | [👎] remove | [➡️] next | [❌] delete",
+        inline=False)
+    mensajeEmbed.set_footer(
+        text=
+        "Tener en cuenta que los mensajes de las colas se actualizan automaticamente una vez enviados."
+    )
+
+    await canalSpamComandos.send(embed=mensajeEmbed)
+
+
+# Description: Mostrar todas las colas existentes
+# Access: Only Mods
+async def manejarComandoAll():
+
+    # Verificacion de mod
+    if not esMod(autorMensaje):
+        print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoAll + ".")
+        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        return
+
+    mensaje = "No Hay ninguna cola."
+
+    if len(colas) > 0:
+        mensaje = ""
+
+    for unaCola in colas:
+        mensaje += str(unaCola[0]) + " | " + str(len(unaCola[1])) + "\n"
+
+    # Creacion de mensaje embed
+    mensajeEmbed = discord.Embed(title="Todas las colas:",
+                                 color=discord.Color.purple())
+    mensajeEmbed.set_thumbnail(url="https://i.imgur.com/FU1z6dq.png")
+    mensajeEmbed.add_field(name="Nombre de Cola | Cantidad de Miembros",
+                           value=mensaje,
+                           inline=False)
+
+    await canalSpamComandos.send(embed=mensajeEmbed)
+
 
 # Envia un nuevo embed de una cola
 async def enviarMensajeCola(nombreCola):
@@ -363,6 +444,7 @@ async def enviarMensajeCola(nombreCola):
     for emoji in emojis:
         await mensajeEnviado.add_reaction(emoji)
 
+
 # Actualiza el embed de una cola
 async def actualizarMensajeCola(nombreCola):
     # Genero embed a enviar
@@ -375,6 +457,7 @@ async def actualizarMensajeCola(nombreCola):
     if not mensajeDeCola == None:
         # Edito el mensaje
         await mensajeDeCola.edit(embed=embedCompleto)
+
 
 # Elimina el embed de una cola
 async def eliminarMensajeCola(nombreCola):
@@ -394,16 +477,21 @@ async def on_message(message):
     if message.author == cliente.user:
         return
 
+    # Si no me invocaron ignoro el mensaje
+    if not message.content.split(" ", 5)[0] == prefijoBot:
+        return
+
     # Utilizando variables globales
     global mensaje
     global autorMensaje
     global tagAlAutor
-    
+
     # Variables utiles
     mensaje = message.content
+    print("[Mensaje recibido] " + mensaje)
     autorMensaje = message.author
     tagAlAutor = "<@" + str(autorMensaje.id) + ">"
-    
+
     # Comando para crear nueva cola [ONLY MODS]
     if mensaje.startswith(prefijoBot + " " + comandoCreate):
         await manejarComandoCreate()
@@ -428,6 +516,15 @@ async def on_message(message):
     elif mensaje.startswith(prefijoBot + " " + comandoRemove):
         await manejarComandoRemove()
 
+    elif mensaje.startswith(prefijoBot + " " + comandoHelp):
+        await manejarComandoHelp()
+
+    elif mensaje.startswith(prefijoBot + " " + comandoAll):
+        await manejarComandoAll()
+
+    elif mensaje.startswith(prefijoBot):
+        await message.channel.send("Comando no existente. Usa `" + prefijoBot + " " + comandoHelp + "` para una lista de comandos.")
+
 
 # Evento de reaccion recibida
 @cliente.event
@@ -449,7 +546,8 @@ async def on_reaction_add(reaction, user):
     tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
     # Variables necesarias
-    nombreCola = reaction.message.embeds[0].title.split(" ", 3)[2]
+    nombreCola = reaction.message.embeds[0].title.split(" ",
+                                                        2)[1].split(":", 1)[0]
     emoji = reaction.emoji
 
     # Remuevo la reaccion generada por el usuario
@@ -457,18 +555,35 @@ async def on_reaction_add(reaction, user):
 
     if emoji == '👍':
         mensaje += comandoAdd + " " + nombreCola
+        if len(mensaje.split(" ",7)) > 3:
+            await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
+            + str(autorMensaje) + ". Por favor intente nuevamente.")
+        print("[Add] " + mensaje)
         await manejarComandoAdd()
     elif emoji == '👎':
         mensaje += comandoRemove + " " + nombreCola
+        if len(mensaje.split(" ",7)) > 3:
+            await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
+            + str(autorMensaje) + ". Por favor intente nuevamente.")
+        print("[Remove] " + mensaje)
         await manejarComandoRemove()
     elif emoji == '➡️':
         mensaje += comandoNext + " " + nombreCola
+        if len(mensaje.split(" ",7)) > 3:
+            await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
+            + str(autorMensaje) + ". Por favor intente nuevamente.")
+        print("[Next] " + mensaje)
         await manejarComandoNext()
     elif emoji == '❌':
         mensaje += comandoDelete + " " + nombreCola
+        if len(mensaje.split(" ",7)) > 3:
+            await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
+            + str(autorMensaje) + ". Por favor intente nuevamente.")
+        print("[Delete] " + mensaje)
         await manejarComandoDelete()
     else:
         return
+
 
 # Corre el bot
 cliente.run(token)
