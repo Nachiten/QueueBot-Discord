@@ -10,6 +10,7 @@ from utils import obtenerMensajeDeCola
 comandoDelete = Configs.comandoDelete
 prefijoBot = Configs.prefijoBot
 
+
 # Elimina una cola de la lista
 def eliminarCola(nombreCola):
     for unaCola in colas:
@@ -17,6 +18,7 @@ def eliminarCola(nombreCola):
             colas.remove(unaCola)
             return
     print("[ERROR] No fue encontrada la cola que deberia existir")
+
 
 # Elimina el embed de una cola
 async def eliminarMensajeCola(nombreCola):
@@ -27,6 +29,7 @@ async def eliminarMensajeCola(nombreCola):
     if not mensajeDeCola == None:
         # Borro el mensaje
         await mensajeDeCola.delete()
+
 
 # Description: Eliminar una cola
 # Access: Only Mods

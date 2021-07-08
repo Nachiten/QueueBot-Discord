@@ -9,6 +9,7 @@ from utils import cantidadDeParametrosEs
 comandoList = Configs.comandoList
 prefijoBot = Configs.prefijoBot
 
+
 # Description: Muestra una cola por output-bot
 # Access: Only Mods
 async def manejarComandoList(mensaje, autorMensaje, tagAlAutor):

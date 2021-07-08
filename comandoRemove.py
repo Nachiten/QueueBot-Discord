@@ -11,9 +11,11 @@ from utils import colas
 comandoRemove = Configs.comandoRemove
 prefijoBot = Configs.prefijoBot
 
+
 # Quita un miembro de una cola
 def quitarDeCola(nombreCola, autorMensaje):
     colas[indexDeCola(nombreCola)][1].remove(autorMensaje)
+
 
 # Description: Eliminar una persona de una cola
 # Access: Everyone

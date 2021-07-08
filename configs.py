@@ -1,6 +1,6 @@
 class Configs:
     # Canal donde se le enviaran comandos al bot
-    canalSpamComandosID = 862383126885695489 
+    canalSpamComandosID = 862383126885695489
     # Canal donde el bot enviara sus mensajes sobre la cola
     canalOutputBotID = 862383158971990036
     # Ids de los rangos de moderacion que tendran permisos totales
@@ -18,4 +18,3 @@ class Configs:
     comandoRemove = "remove"
     comandoHelp = "help"
     comandoAll = "all"
-

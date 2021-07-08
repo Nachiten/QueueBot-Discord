@@ -33,20 +33,23 @@ comandoRemove = Configs.comandoRemove
 comandoHelp = Configs.comandoHelp
 comandoAll = Configs.comandoAll
 
+canalSpamComandos = None
+
 async def chequearIntegridadDeMensaje(mensaje):
     if len(mensaje.split(" ", 7)) > 3:
-        await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de " 
-        + str(autorMensaje) + ". Por favor intente nuevamente.")
+        await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de "
+                                     + str(autorMensaje) + ". Por favor intente nuevamente.")
+
 
 # Averigua si un mensaje pertenece a alguna cola de mensajes
 def esAlgunaReaccionDeCola(mensaje):
-    mensajesDeColas = map(lambda unaCola : unaCola[2], colas)
-    return any(map(lambda unMensaje : unMensaje.id == mensaje.id, mensajesDeColas))
+    mensajesDeColas = map(lambda unaCola: unaCola[2], colas)
+    return any(map(lambda unMensaje: unMensaje.id == mensaje.id, mensajesDeColas))
+
 
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
-    global canalOutputBot
     global canalSpamComandos
 
     # Cargo los canales donde el bot hablara
@@ -56,16 +59,14 @@ async def on_ready():
     GlobalVariables.canalOutputBot = canalOutputBot
     GlobalVariables.canalSpamComandos = canalSpamComandos
 
-    if canalSpamComandos == None:
+    if canalSpamComandos is None:
         print("[ERROR] No se pudo encontrar el canal 'canalSpamComandos'")
-    if canalOutputBot == None:
+    if canalOutputBot is None:
         print("[ERROR] No se pudo encontrar el canal 'canalOutputBot'")
 
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
-    await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-        .format(cliente))
+    await canalOutputBot.send("El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
 # Evento de mensaje recibido
@@ -129,7 +130,6 @@ async def on_message(message):
 # Evento de reaccion recibida
 @cliente.event
 async def on_reaction_add(reaction, user):
-
     # No hago nada con cualquier reaccion hecha por el bot
     if user == cliente.user:
         return

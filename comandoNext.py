@@ -11,6 +11,7 @@ from utils import actualizarMensajeCola
 comandoNext = Configs.comandoNext
 prefijoBot = Configs.prefijoBot
 
+
 # Description: Atender siguiente persona en una cola
 # Access: Only Mods
 async def manejarComandoNext(mensaje, autorMensaje, tagAlAutor):

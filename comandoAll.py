@@ -9,6 +9,7 @@ from utils import colas
 comandoAll = Configs.comandoAll
 prefijoBot = Configs.prefijoBot
 
+
 # Description: Mostrar todas las colas existentes
 # Access: Only Mods
 async def manejarComandoAll(mensaje, autorMensaje, tagAlAutor):

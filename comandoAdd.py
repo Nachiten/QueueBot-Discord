@@ -11,9 +11,11 @@ from utils import indexDeCola
 comandoAdd = Configs.comandoAdd
 prefijoBot = Configs.prefijoBot
 
+
 # Agrega nuevo miembro a una cola
 def agregarACola(nombreCola, autorMensaje):
     colas[indexDeCola(nombreCola)][1].append(autorMensaje)
+
 
 # Description: Agregar una persona a una cola
 # Access: Everyone
