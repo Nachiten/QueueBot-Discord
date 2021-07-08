@@ -23,7 +23,8 @@ async def manejarComandoNext(mensaje, autorMensaje, tagAlAutor):
     if not esMod(autorMensaje):
         print("[PermissionError] El usuario " + autorMensaje.name +
               " intento usar el comando " + comandoNext + ".")
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}

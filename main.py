@@ -3,6 +3,8 @@ import discord
 
 from configs import Configs
 from globalVariables import GlobalVariables
+from utils import colas
+
 from comandoCreate import manejarComandoCreate
 from comandoAll import manejarComandoAll
 from comandoAdd import manejarComandoAdd
@@ -11,17 +13,15 @@ from comandoList import manejarComandoList
 from comandoNext import manejarComandoNext
 from comandoRemove import manejarComandoRemove
 from comandoHelp import manejarComandoHelp
-from utils import colas
 
 # Datos administrativos del bot
 cliente = discord.Client()
 token = os.environ['TOKEN']
 
 # Configs
-rangosMOD = Configs.rangosMOD
-emojis = Configs.emojis
 canalSpamComandosID = Configs.canalSpamComandosID
 canalOutputBotID = Configs.canalOutputBotID
+
 prefijoBot = Configs.prefijoBot
 
 comandoCreate = Configs.comandoCreate
@@ -35,16 +35,19 @@ comandoAll = Configs.comandoAll
 
 canalSpamComandos = None
 
-async def chequearIntegridadDeMensaje(mensaje):
+
+async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
     if len(mensaje.split(" ", 7)) > 3:
-        await canalSpamComandos.send("**[Error]** Ha ocurrido un error al procesar la solicitud de "
-                                     + str(autorMensaje) + ". Por favor intente nuevamente.")
+        await canalSpamComandos.send(
+            "**[Error]** Ha ocurrido un error al procesar la solicitud de " +
+            str(autorMensaje) + ". Por favor intente nuevamente.")
 
 
 # Averigua si un mensaje pertenece a alguna cola de mensajes
 def esAlgunaReaccionDeCola(mensaje):
     mensajesDeColas = map(lambda unaCola: unaCola[2], colas)
-    return any(map(lambda unMensaje: unMensaje.id == mensaje.id, mensajesDeColas))
+    return any(
+        map(lambda unMensaje: unMensaje.id == mensaje.id, mensajesDeColas))
 
 
 # Evento de inicializacion
@@ -66,7 +69,9 @@ async def on_ready():
 
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
-    await canalOutputBot.send("El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
+    await canalOutputBot.send(
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
+        .format(cliente))
 
 
 # Evento de mensaje recibido
@@ -76,52 +81,36 @@ async def on_message(message):
     if message.author == cliente.user:
         return
 
+    mensajeSeparado = message.content.split(" ", 5)
+
     # Si no me invocaron ignoro el mensaje
-    if not message.content.split(" ", 5)[0] == prefijoBot:
+    if not mensajeSeparado[0] == prefijoBot:
         return
 
-    # Utilizando variables globales
-    global mensaje
-    global autorMensaje
-    global tagAlAutor
-
-    # Variables utiles
+    # Variables necesarias
     mensaje = message.content
-    print("[Mensaje recibido] " + mensaje)
     autorMensaje = message.author
     tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
-    # Comando para crear nueva cola [ONLY MODS]
-    if mensaje.startswith(prefijoBot + " " + comandoCreate):
+    print("[Mensaje recibido] " + mensaje)
+
+    if mensajeSeparado[1] == comandoCreate:
         await manejarComandoCreate(mensaje, autorMensaje, tagAlAutor)
-
-    # Comando para listar una cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + " " + comandoList):
+    elif mensajeSeparado[1] == comandoList:
         await manejarComandoList(mensaje, autorMensaje, tagAlAutor)
-
-    # Comando para obtener siguiente de la cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + " " + comandoNext):
+    elif mensajeSeparado[1] == comandoNext:
         await manejarComandoNext(mensaje, autorMensaje, tagAlAutor)
-
-    # Comando para eliminar una cola [ONLY MODS]
-    elif mensaje.startswith(prefijoBot + " " + comandoDelete):
+    elif mensajeSeparado[1] == comandoDelete:
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
-
-    # Comando para agregarse a una cola
-    elif mensaje.startswith(prefijoBot + " " + comandoAdd):
+    elif mensajeSeparado[1] == comandoAdd:
         await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
-
-    # Comando para quitarse a uno mismo de una cola
-    elif mensaje.startswith(prefijoBot + " " + comandoRemove):
+    elif mensajeSeparado[1] == comandoRemove:
         await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
-
-    elif mensaje.startswith(prefijoBot + " " + comandoHelp):
+    elif mensajeSeparado[1] == comandoHelp:
         await manejarComandoHelp(mensaje, autorMensaje, tagAlAutor)
-
-    elif mensaje.startswith(prefijoBot + " " + comandoAll):
+    elif mensajeSeparado[1] == comandoAll:
         await manejarComandoAll(mensaje, autorMensaje, tagAlAutor)
-
-    elif mensaje.startswith(prefijoBot):
+    else:
         await message.channel.send("Comando no existente. Usa `" + prefijoBot +
                                    " " + comandoHelp +
                                    "` para una lista de comandos.")
@@ -131,17 +120,9 @@ async def on_message(message):
 @cliente.event
 async def on_reaction_add(reaction, user):
     # No hago nada con cualquier reaccion hecha por el bot
-    if user == cliente.user:
+    # Y Chequeo si la reaccion es a un mensaje enviado por el bot
+    if user == cliente.user or not esAlgunaReaccionDeCola(reaction.message):
         return
-
-    # Chequeo si la reaccion es a un mensaje enviado por el bot
-    if not esAlgunaReaccionDeCola(reaction.message):
-        print("Reaccion no perteneciente al sistema.")
-        return
-
-    global mensaje
-    global autorMensaje
-    global tagAlAutor
 
     mensaje = prefijoBot + " "
     autorMensaje = user
@@ -158,28 +139,28 @@ async def on_reaction_add(reaction, user):
     if emoji == '👍':
         mensaje += comandoAdd + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje)
+        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Add] " + mensaje)
 
         await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
     elif emoji == '👎':
         mensaje += comandoRemove + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje)
+        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Remove] " + mensaje)
 
         await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
     elif emoji == '➡️':
         mensaje += comandoNext + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje)
+        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Next] " + mensaje)
 
         await manejarComandoNext(mensaje, autorMensaje, tagAlAutor)
     elif emoji == '❌':
         mensaje += comandoDelete + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje)
+        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Delete] " + mensaje)
 
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)

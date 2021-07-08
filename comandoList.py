@@ -18,7 +18,8 @@ async def manejarComandoList(mensaje, autorMensaje, tagAlAutor):
     if not esMod(autorMensaje):
         print("[PermissionError] El usuario " + autorMensaje.name +
               " intento usar el comando " + comandoList + ".")
-        await canalSpamComandos.send("No tenes permiso para usar este comando.")
+        await canalSpamComandos.send("No tenes permiso para usar este comando."
+                                     )
         return
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -33,6 +34,7 @@ async def manejarComandoList(mensaje, autorMensaje, tagAlAutor):
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola **" + nombreCola + "**!")
+        await canalSpamComandos.send("No existe la cola **" + nombreCola +
+                                     "**!")
     else:
         await enviarMensajeCola(nombreCola)

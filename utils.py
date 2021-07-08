@@ -14,10 +14,6 @@ prefijoBot = Configs.prefijoBot
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN], mensajeEnviado)
 colas = []
 
-# Variables globales necesarias
-mensaje = None
-autorMensaje = None
-tagAlAutor = None
 
 # Obtiene el index de una cola dentro del array de estas
 def indexDeCola(nombreCola):
@@ -73,7 +69,8 @@ def generarEmbedDeCola(nombreCola):
         miembrosAContinuacion = ""
 
         for index in range(1, len(miembrosCola)):
-            miembrosAContinuacion += str(index) + ") <@" + str(miembrosCola[index].id) + ">\n"
+            miembrosAContinuacion += str(index) + ") <@" + str(
+                miembrosCola[index].id) + ">\n"
 
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Cola " + nombreCola + ":",
@@ -137,5 +134,4 @@ async def actualizarMensajeCola(nombreCola):
     # Checkeo que no sea null para evitar excepciones
     if not mensajeDeCola == None:
         # Edito el mensaje
-        await mensajeDeCola.edit(embed = embedCompleto)
-
+        await mensajeDeCola.edit(embed=embedCompleto)
