@@ -4,11 +4,29 @@ from globalVariables import GlobalVariables
 from utils import esMod
 from utils import existeCola
 from utils import cantidadDeParametrosEs
-from utils import eliminarMensajeCola
-from utils import eliminarCola
+from utils import colas
+from utils import obtenerMensajeDeCola
 
 comandoDelete = Configs.comandoDelete
 prefijoBot = Configs.prefijoBot
+
+# Elimina una cola de la lista
+def eliminarCola(nombreCola):
+    for unaCola in colas:
+        if unaCola[0] == nombreCola:
+            colas.remove(unaCola)
+            return
+    print("[ERROR] No fue encontrada la cola que deberia existir")
+
+# Elimina el embed de una cola
+async def eliminarMensajeCola(nombreCola):
+    # Obtengo el mensaje anterior
+    mensajeDeCola = obtenerMensajeDeCola(nombreCola)
+
+    # Checkeo que no sea null para evitar excepciones
+    if not mensajeDeCola == None:
+        # Borro el mensaje
+        await mensajeDeCola.delete()
 
 # Description: Eliminar una cola
 # Access: Only Mods

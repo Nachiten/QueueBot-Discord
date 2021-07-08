@@ -11,6 +11,7 @@ from comandoList import manejarComandoList
 from comandoNext import manejarComandoNext
 from comandoRemove import manejarComandoRemove
 from comandoHelp import manejarComandoHelp
+from utils import colas
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -31,9 +32,6 @@ comandoAdd = Configs.comandoAdd
 comandoRemove = Configs.comandoRemove
 comandoHelp = Configs.comandoHelp
 comandoAll = Configs.comandoAll
-
-from utils import comandoList
-from utils import colas
 
 async def chequearIntegridadDeMensaje(mensaje):
     if len(mensaje.split(" ", 7)) > 3:

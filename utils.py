@@ -10,15 +10,6 @@ canalSpamComandosID = Configs.canalSpamComandosID
 canalOutputBotID = Configs.canalOutputBotID
 prefijoBot = Configs.prefijoBot
 
-comandoCreate = Configs.comandoCreate
-comandoList = Configs.comandoList
-comandoNext = Configs.comandoNext
-comandoDelete = Configs.comandoDelete
-comandoAdd = Configs.comandoAdd
-comandoRemove = Configs.comandoRemove
-comandoHelp = Configs.comandoHelp
-comandoAll = Configs.comandoAll
-
 # Lista de todas las colas
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN], mensajeEnviado)
 colas = []
@@ -37,25 +28,6 @@ def indexDeCola(nombreCola):
             return index
         index += 1
     print("[ERROR] No se encontro una cola que si deberia.")
-
-
-# Elimina una cola de la lista
-def eliminarCola(nombreCola):
-    for unaCola in colas:
-        if unaCola[0] == nombreCola:
-            colas.remove(unaCola)
-            return
-    print("[ERROR] No fue encontrada la cola que deberia existir")
-
-
-# Agrega nuevo miembro a una cola
-def agregarACola(nombreCola, autorMensaje):
-    colas[indexDeCola(nombreCola)][1].append(autorMensaje)
-
-
-# Quita un miembro de una cola
-def quitarDeCola(nombreCola, autorMensaje):
-    colas[indexDeCola(nombreCola)][1].remove(autorMensaje)
 
 
 # Verifica la cantidad de parametros de un comando
@@ -165,15 +137,5 @@ async def actualizarMensajeCola(nombreCola):
     # Checkeo que no sea null para evitar excepciones
     if not mensajeDeCola == None:
         # Edito el mensaje
-        await mensajeDeCola.edit(embed=embedCompleto)
+        await mensajeDeCola.edit(embed = embedCompleto)
 
-
-# Elimina el embed de una cola
-async def eliminarMensajeCola(nombreCola):
-    # Obtengo el mensaje anterior
-    mensajeDeCola = obtenerMensajeDeCola(nombreCola)
-
-    # Checkeo que no sea null para evitar excepciones
-    if not mensajeDeCola == None:
-        # Borro el mensaje
-        await mensajeDeCola.delete()

@@ -4,11 +4,16 @@ from globalVariables import GlobalVariables
 from utils import existeMiembroEnCola
 from utils import existeCola
 from utils import actualizarMensajeCola
-from utils import agregarACola
 from utils import cantidadDeParametrosEs
+from utils import colas
+from utils import indexDeCola
 
 comandoAdd = Configs.comandoAdd
 prefijoBot = Configs.prefijoBot
+
+# Agrega nuevo miembro a una cola
+def agregarACola(nombreCola, autorMensaje):
+    colas[indexDeCola(nombreCola)][1].append(autorMensaje)
 
 # Description: Agregar una persona a una cola
 # Access: Everyone

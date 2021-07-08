@@ -3,12 +3,17 @@ from globalVariables import GlobalVariables
 
 from utils import existeMiembroEnCola
 from utils import existeCola
-from utils import quitarDeCola
 from utils import cantidadDeParametrosEs
 from utils import actualizarMensajeCola
+from utils import indexDeCola
+from utils import colas
 
 comandoRemove = Configs.comandoRemove
 prefijoBot = Configs.prefijoBot
+
+# Quita un miembro de una cola
+def quitarDeCola(nombreCola, autorMensaje):
+    colas[indexDeCola(nombreCola)][1].remove(autorMensaje)
 
 # Description: Eliminar una persona de una cola
 # Access: Everyone
