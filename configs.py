@@ -1,4 +1,4 @@
-class Config:
+class Configs:
     # Canal donde se le enviaran comandos al bot
     canalSpamComandosID = 862383126885695489 
     # Canal donde el bot enviara sus mensajes sobre la cola
@@ -18,3 +18,4 @@ class Config:
     comandoRemove = "remove"
     comandoHelp = "help"
     comandoAll = "all"
+
