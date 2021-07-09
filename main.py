@@ -16,7 +16,7 @@ from comandoHelp import manejarComandoHelp
 
 # Datos administrativos del bot
 cliente = discord.Client()
-token = os.environ['TOKEN']
+TOKEN = os.environ['TOKEN']
 
 # Configs
 canalSpamComandosID = Configs.canalSpamComandosID
@@ -87,6 +87,13 @@ async def on_message(message):
     if not mensajeSeparado[0] == prefijoBot:
         return
 
+    # Si no inserto ningun segundo parametro
+    if len(mensajeSeparado) == 1:
+        await message.channel.send(
+            f"Debes insertar algun comando. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
+        )
+        return
+
     # Variables necesarias
     mensaje = message.content
     autorMensaje = message.author
@@ -111,9 +118,9 @@ async def on_message(message):
     elif mensajeSeparado[1] == comandoAll:
         await manejarComandoAll(mensaje, autorMensaje, tagAlAutor)
     else:
-        await message.channel.send("Comando no existente. Usa `" + prefijoBot +
-                                   " " + comandoHelp +
-                                   "` para una lista de comandos.")
+        await message.channel.send(
+            f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
+        )
 
 
 # Evento de reaccion recibida
@@ -164,9 +171,7 @@ async def on_reaction_add(reaction, user):
         print("[Delete] " + mensaje)
 
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
-    else:
-        return
 
 
 # Corre el bot
-cliente.run(token)
+cliente.run(TOKEN)

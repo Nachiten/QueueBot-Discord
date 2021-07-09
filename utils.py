@@ -6,9 +6,7 @@ from globalVariables import GlobalVariables
 # Configs
 rangosMOD = Configs.rangosMOD
 emojis = Configs.emojis
-canalSpamComandosID = Configs.canalSpamComandosID
-canalOutputBotID = Configs.canalOutputBotID
-prefijoBot = Configs.prefijoBot
+imagenThumbnail = Configs.imagenThumbnail
 
 # Lista de todas las colas
 # Una cola es de la forma ("nombre", [usuario1, usuario2, usuarioN], mensajeEnviado)
@@ -50,6 +48,11 @@ def existeMiembroEnCola(miembro, nombreCola):
 def esMod(unUsuario):
     return any(map(lambda unRol: unRol.id in rangosMOD, unUsuario.roles))
 
+async def printearErrorSinPermisos(autorMensaje, nombreComando):
+    canalSpamComandos = GlobalVariables.canalSpamComandos
+    print("[PermissionError] El usuario " + autorMensaje.name +
+              " intento usar el comando " + comandoAll + ".")
+    await canalSpamComandos.send("No tenes permiso para usar este comando.")
 
 # Genera el mensaje embed a enviar
 def generarEmbedDeCola(nombreCola):
@@ -75,7 +78,7 @@ def generarEmbedDeCola(nombreCola):
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Cola " + nombreCola + ":",
                                  color=discord.Color.purple())
-    mensajeEmbed.set_thumbnail(url="https://i.imgur.com/FU1z6dq.png")
+    mensajeEmbed.set_thumbnail(url=imagenThumbnail)
     mensajeEmbed.add_field(name="Siguiente turno:",
                            value=siguienteMiembro,
                            inline=False)

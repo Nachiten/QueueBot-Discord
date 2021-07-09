@@ -1,6 +1,17 @@
 import discord
 
 from globalVariables import GlobalVariables
+from configs import Configs
+
+PREFIX = Configs.prefijoBot
+COMANDO_ADD = Configs.comandoAdd
+COMANDO_REMOVE = Configs.comandoRemove
+COMANDO_NEXT = Configs.comandoNext
+COMANDO_DELETE = Configs.comandoDelete
+COMANDO_LIST = Configs.comandoList
+COMANDO_ALL = Configs.comandoAll
+COMANDO_CREATE = Configs.comandoCreate
+imagenThumbnail = Configs.imagenThumbnail
 
 
 # Description: Mostrar mensaje de ayuda
@@ -11,18 +22,22 @@ async def manejarComandoHelp(mensaje, autorMensaje, tagAlAutor):
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
                                  color=discord.Color.purple())
-    mensajeEmbed.set_thumbnail(url="https://i.imgur.com/FU1z6dq.png")
+    mensajeEmbed.set_thumbnail(url=imagenThumbnail)
     mensajeEmbed.add_field(name="Comandos para todos:",
-                           value="!queue add unaCola | Agregarse a una cola\n"
-                           "!queue remove unaCola | Quitarse de una cola",
+                           value=f'''
+                           {PREFIX} {COMANDO_ADD} unaCola | Agregarse a una cola
+                           {PREFIX} {COMANDO_REMOVE} unaCola | Quitarse de una cola
+                           ''',
                            inline=False)
     mensajeEmbed.add_field(name="Comandos para Ayudantes:",
-                           value="!queue create unaCola | Crear una nueva cola\n"
-                           "!queue delete unaCola | Eliminar una cola\n"
-                           "!queue next unaCola | Atender el siguiente en una cola\n"
-                           "!queue list unaCola | Mostrar estado de la cola\n"
-                           "!queue all | Mostrar todas las colas existentes",
-        inline=False)
+                           value=f'''
+                           {PREFIX} {COMANDO_CREATE} unaCola | Crear una nueva cola
+                           {PREFIX} {COMANDO_DELETE} unaCola | Eliminar una cola
+                           {PREFIX} {COMANDO_NEXT} unaCola | Atender el siguiente en una cola
+                           {PREFIX} {COMANDO_LIST} unaCola | Mostrar estado de la cola
+                           {PREFIX} {COMANDO_ALL} | Mostrar todas las colas existentes
+                           ''',
+                           inline=False)
     mensajeEmbed.add_field(
         name="Emojis:",
         value="[👍] add | [👎] remove | [➡️] next | [❌] delete",

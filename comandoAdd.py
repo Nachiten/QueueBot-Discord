@@ -27,22 +27,19 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
     # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            "Sintaxis incorrecta, uso: `" + prefijoBot + " " + comandoAdd +
-            " nombreCola canalDondeEstas(solo un numero)`.")
+            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoAdd} nombreCola`.")
         return
 
     nombreCola = parametrosMensaje[2]
 
     if not existeCola(nombreCola):
-        await canalSpamComandos.send("No existe la cola " + nombreCola + "!")
+        await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
     else:
         if existeMiembroEnCola(autorMensaje, nombreCola):
-            await canalSpamComandos.send(tagAlAutor +
-                                         " Ya estas en la cola **" +
-                                         nombreCola + "**!")
+            await canalSpamComandos.send(
+                f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
         else:
             agregarACola(nombreCola, autorMensaje)
-            await canalSpamComandos.send(tagAlAutor +
-                                         " ha sido agregado a la cola **" +
-                                         nombreCola + "**.")
+            await canalSpamComandos.send(
+                f"{tagAlAutor} ha sido agregado a la cola **{nombreCola}**.")
             await actualizarMensajeCola(nombreCola)

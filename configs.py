@@ -18,3 +18,4 @@ class Configs:
     comandoRemove = "remove"
     comandoHelp = "help"
     comandoAll = "all"
+    imagenThumbnail = "https://i.imgur.com/LXStHiQ.png"
