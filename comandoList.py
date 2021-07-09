@@ -25,7 +25,9 @@ async def manejarComandoList(mensaje, autorMensaje):
 
     # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoList} nombreCola`")
+        await canalSpamComandos.send(
+            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoList} nombreCola`"
+        )
         return
 
     nombreCola = parametrosMensaje[2]

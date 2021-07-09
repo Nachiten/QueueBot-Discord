@@ -45,7 +45,8 @@ class Colas:
         if len(self.colasActuales) > 0:
             mensaje = ""
             for unaCola in self.colasActuales:
-                mensaje += str(unaCola[0]) + " | " + str(len(unaCola[1])) + "\n"
+                mensaje += str(unaCola[0]) + " | " + str(len(
+                    unaCola[1])) + "\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Todas las colas:",
@@ -77,7 +78,9 @@ class Colas:
     @classmethod
     # Averigua si un mensaje pertenece a alguna cola de mensajes
     def esAlgunaReaccionDeCola(self, mensaje):
-        return any(map(lambda unaCola: unaCola.perteneceElMensaje(mensaje), self.colasActuales))
+        return any(
+            map(lambda unaCola: unaCola.perteneceElMensaje(mensaje),
+                self.colasActuales))
 
     # --- Son awaited porque envian mensajes ---
 
@@ -95,6 +98,7 @@ class Colas:
 
     @classmethod
     async def enviarMensajeNextEnCola(self, nombreCola, canalOutputBot):
-        await self.getColaPorNombre(nombreCola).enviarMensajeNext(canalOutputBot)
+        await self.getColaPorNombre(nombreCola).enviarMensajeNext(
+            canalOutputBot)
 
     # --- Son awaited porque envian mensajes ---

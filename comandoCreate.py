@@ -25,14 +25,19 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor):
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoCreate} nombreCola`")
+        await canalSpamComandos.send(
+            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoCreate} nombreCola`"
+        )
         return
 
     nombreCola = parametrosMensaje[2]
 
     if (Colas.existeCola(nombreCola)):
-        await canalSpamComandos.send(f"Ya existe una cola con el nombre **{nombreCola}**!")
+        await canalSpamComandos.send(
+            f"Ya existe una cola con el nombre **{nombreCola}**!")
     else:
         Colas.agregarCola(nombreCola)
-        await canalSpamComandos.send(f"{tagAlAutor} ha creado una nueva cola llamada: **{str(nombreCola)}**.")
+        await canalSpamComandos.send(
+            f"{tagAlAutor} ha creado una nueva cola llamada: **{str(nombreCola)}**."
+        )
         await Colas.enviarMensajeNuevoEnCola(nombreCola)

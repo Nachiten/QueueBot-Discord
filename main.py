@@ -63,7 +63,8 @@ async def on_ready():
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
     await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
+        .format(cliente))
 
 
 # Evento de mensaje recibido
@@ -120,7 +121,8 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     # No hago nada con cualquier reaccion hecha por el bot
     # Y Chequeo si la reaccion es a un mensaje enviado por el bot
-    if user == cliente.user or not Colas.esAlgunaReaccionDeCola(reaction.message):
+    if user == cliente.user or not Colas.esAlgunaReaccionDeCola(
+            reaction.message):
         return
 
     mensaje = prefijoBot + " "
