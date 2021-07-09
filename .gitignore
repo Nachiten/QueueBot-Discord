@@ -2,3 +2,5 @@
 __pycache__/
 # Pycharm config files
 .idea/
+# Breakpoints created by Replit
+.breakpoints
