@@ -1,11 +1,9 @@
-import discord
-
 from configs import Configs
 from globalVariables import GlobalVariables
 
 from utils import esMod
-from utils import colas
 from utils import printearErrorSinPermisos
+from colas import Colas
 
 comandoAll = Configs.comandoAll
 prefijoBot = Configs.prefijoBot
@@ -23,20 +21,6 @@ async def manejarComandoAll(mensaje, autorMensaje, tagAlAutor):
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
-    mensaje = "No Hay ninguna cola."
-
-    if len(colas) > 0:
-        mensaje = ""
-
-    for unaCola in colas:
-        mensaje += str(unaCola[0]) + " | " + str(len(unaCola[1])) + "\n"
-
-    # Creacion de mensaje embed
-    mensajeEmbed = discord.Embed(title="Todas las colas:",
-                                 color=discord.Color.purple())
-    mensajeEmbed.set_thumbnail(url=imagenThumbnail)
-    mensajeEmbed.add_field(name="Nombre de Cola | Cantidad de Miembros",
-                           value=mensaje,
-                           inline=False)
+    mensajeEmbed = Colas.generarMensajeListandoColas()
 
     await canalSpamComandos.send(embed=mensajeEmbed)

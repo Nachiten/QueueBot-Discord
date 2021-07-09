@@ -13,12 +13,7 @@ COMANDO_ALL = Configs.comandoAll
 COMANDO_CREATE = Configs.comandoCreate
 imagenThumbnail = Configs.imagenThumbnail
 
-
-# Description: Mostrar mensaje de ayuda
-# Access: Everyone
-async def manejarComandoHelp(mensaje, autorMensaje, tagAlAutor):
-    canalSpamComandos = GlobalVariables.canalSpamComandos
-
+def generarMensajeEmbed():
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
                                  color=discord.Color.purple())
@@ -46,5 +41,14 @@ async def manejarComandoHelp(mensaje, autorMensaje, tagAlAutor):
         text=
         "Tener en cuenta que los mensajes de las colas se actualizan automaticamente una vez enviados."
     )
+
+    return mensajeEmbed
+
+# Description: Mostrar mensaje de ayuda
+# Access: Everyone
+async def manejarComandoHelp(mensaje, autorMensaje, tagAlAutor):
+    canalSpamComandos = GlobalVariables.canalSpamComandos
+
+    mensajeEmbed = generarMensajeEmbed()
 
     await canalSpamComandos.send(embed=mensajeEmbed)

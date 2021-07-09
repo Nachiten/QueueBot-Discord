@@ -1,20 +1,12 @@
 from configs import Configs
 from globalVariables import GlobalVariables
 
-from utils import existeMiembroEnCola
-from utils import existeCola
+
 from utils import cantidadDeParametrosEs
-from utils import actualizarMensajeCola
-from utils import indexDeCola
-from utils import colas
+from colas import Colas
 
 comandoRemove = Configs.comandoRemove
 prefijoBot = Configs.prefijoBot
-
-
-# Quita un miembro de una cola
-def quitarDeCola(nombreCola, autorMensaje):
-    colas[indexDeCola(nombreCola)][1].remove(autorMensaje)
 
 
 # Description: Eliminar una persona de una cola
@@ -31,12 +23,12 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor):
 
     nombreCola = parametrosMensaje[2]
 
-    if not existeCola(nombreCola):
+    if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
     else:
-        if not existeMiembroEnCola(autorMensaje, nombreCola):
+        if not Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
             await canalSpamComandos.send(f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
         else:
-            quitarDeCola(nombreCola, autorMensaje)
+            Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
             await canalSpamComandos.send(f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
-            await actualizarMensajeCola(nombreCola)
+            await Colas.actualizarMensajeExistenteEnCola(nombreCola)

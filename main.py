@@ -3,7 +3,7 @@ import discord
 
 from configs import Configs
 from globalVariables import GlobalVariables
-from utils import colas
+from colas import Colas
 
 from comandoCreate import manejarComandoCreate
 from comandoAll import manejarComandoAll
@@ -39,15 +39,9 @@ canalSpamComandos = None
 async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
     if len(mensaje.split(" ", 7)) > 3:
         await canalSpamComandos.send(
-            "**[Error]** Ha ocurrido un error al procesar la solicitud de " +
-            str(autorMensaje) + ". Por favor intente nuevamente.")
+            f"**[Error]** Ha ocurrido un error al procesar la solicitud de {str(autorMensaje)}. Por favor intente nuevamente."
+        )
 
-
-# Averigua si un mensaje pertenece a alguna cola de mensajes
-def esAlgunaReaccionDeCola(mensaje):
-    mensajesDeColas = map(lambda unaCola: unaCola[2], colas)
-    return any(
-        map(lambda unMensaje: unMensaje.id == mensaje.id, mensajesDeColas))
 
 
 # Evento de inicializacion
@@ -128,7 +122,7 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     # No hago nada con cualquier reaccion hecha por el bot
     # Y Chequeo si la reaccion es a un mensaje enviado por el bot
-    if user == cliente.user or not esAlgunaReaccionDeCola(reaction.message):
+    if user == cliente.user or not Colas.esAlgunaReaccionDeCola(reaction.message):
         return
 
     mensaje = prefijoBot + " "
