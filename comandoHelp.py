@@ -13,6 +13,7 @@ COMANDO_ALL = Configs.comandoAll
 COMANDO_CREATE = Configs.comandoCreate
 imagenThumbnail = Configs.imagenThumbnail
 
+
 def generarMensajeEmbed():
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
@@ -43,6 +44,7 @@ def generarMensajeEmbed():
     )
 
     return mensajeEmbed
+
 
 # Description: Mostrar mensaje de ayuda
 # Access: Everyone

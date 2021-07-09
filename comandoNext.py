@@ -40,6 +40,8 @@ async def manejarComandoNext(mensaje, autorMensaje, tagAlAutor):
                 f"No quedan miembros en la cola **{nombreCola}**.")
             return
         else:
+            # TODO | Se rompe encapsulamiento, toda esta logica deberia estar en la clase Cola
+
             # Calculo los siguientes para printearlos
             siguienteEnLaLista = "<@" + str(
                 Colas.obtenerYQuitarIdDeSiguienteEnCola(nombreCola)) + ">"

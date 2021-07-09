@@ -91,7 +91,8 @@ class Cola:
 
         # Si hay al menos un miembro, fijo el primero de la cola
         if len(miembrosCola) > 0:
-            siguienteMiembro = "1) " + "<@" + str(miembrosCola[0].objetoUsuario.id) + ">"
+            siguienteMiembro = "1) " + "<@" + str(
+                miembrosCola[0].objetoUsuario.id) + ">"
 
         # Si hay mas de un miembro, fijo los a continuacion
         if len(miembrosCola) > 1:
@@ -119,7 +120,8 @@ class Cola:
         return mensajeEmbed
 
     def existeUsuario(self, usuario):
-        return usuario in map(lambda unUsuario : unUsuario.objetoUsuario, self.usuarios)
+        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario,
+                              self.usuarios)
 
     def cantidadDeUsuarios(self):
         return len(self.usuarios)
