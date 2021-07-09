@@ -4,7 +4,8 @@ class Configs:
     # Canal donde el bot enviara sus mensajes sobre la cola
     canalOutputBotID = 862383158971990036
     # Ids de los rangos de moderacion que tendran permisos totales
-    rangosMOD = [862332264830074891]
+    # [AyudanteX, AyudanteY]
+    rangosMOD = [863139319719526430,863139445809086484]
     # Emojis utilizados
     emojis = ['👍', '👎', '➡️', '❌']
     # Como se debe invocar al bot

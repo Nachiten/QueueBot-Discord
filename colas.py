@@ -73,6 +73,11 @@ class Colas():
     def existeUsuarioEnCola(self, nombreUsuario, nombreCola):
         return self.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
     
+    @classmethod
+    # Averigua si un mensaje pertenece a alguna cola de mensajes
+    def esAlgunaReaccionDeCola(self, mensaje):
+        return any(map(lambda unaCola: unaCola.perteneceElMensaje(mensaje), self.colasActuales))
+
     # --- Son awaited porque envian mensajes ---
 
     @classmethod
@@ -87,21 +92,13 @@ class Colas():
     async def eliminarMensajeEnCola(self, nombreCola):
         await self.getColaPorNombre(nombreCola).eliminarMensaje()
 
+    @classmethod
+    async def enviarMensajeNextEnCola(self, nombreCola, canalOutputBot):
+        await self.getColaPorNombre(nombreCola).enviarMensajeNext(canalOutputBot)
+
     # --- Son awaited porque envian mensajes ---
 
-    @classmethod
-    def cantidadDeUsuariosEnCola(self, nombreCola):
-        return self.getColaPorNombre(nombreCola).cantidadDeUsuarios()
 
-    @classmethod
-    def obtenerYQuitarIdDeSiguienteEnCola(self, nombreCola):
-        return self.getColaPorNombre(nombreCola).obtenerYQuitarIdDeSiguiente()
-
-    @classmethod
-    def obtenerIdDeSiguienteEnCola(self, nombreCola):
-        return self.getColaPorNombre(nombreCola).obtenerIdDeSiguiente()
-
-    @classmethod
-    # Averigua si un mensaje pertenece a alguna cola de mensajes
-    def esAlgunaReaccionDeCola(self, mensaje):
-        return any(map(lambda unaCola: unaCola.perteneceElMensaje(mensaje), self.colasActuales))
+    
+    
+    
