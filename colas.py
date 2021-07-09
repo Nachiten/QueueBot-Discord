@@ -7,7 +7,7 @@ imagenThumbnail = Configs.imagenThumbnail
 
 # Clase estatica
 # Mantiene una lista de todas las colas del sistema
-class Colas(object):
+class Colas():
     # Las colas existentes del sitema
     colasActuales = []
 
