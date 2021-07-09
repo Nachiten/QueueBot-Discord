@@ -3,16 +3,16 @@ import discord
 
 from configs import Configs
 from globalVariables import GlobalVariables
-from colas import Colas
+from clases.colas import Colas
 
-from comandoCreate import manejarComandoCreate
-from comandoAll import manejarComandoAll
-from comandoAdd import manejarComandoAdd
-from comandoDelete import manejarComandoDelete
-from comandoList import manejarComandoList
-from comandoNext import manejarComandoNext
-from comandoRemove import manejarComandoRemove
-from comandoHelp import manejarComandoHelp
+from comandos.comandoCreate import manejarComandoCreate
+from comandos.comandoAll import manejarComandoAll
+from comandos.comandoAdd import manejarComandoAdd
+from comandos.comandoDelete import manejarComandoDelete
+from comandos.comandoList import manejarComandoList
+from comandos.comandoNext import manejarComandoNext
+from comandos.comandoRemove import manejarComandoRemove
+from comandos.comandoHelp import manejarComandoHelp
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -43,7 +43,6 @@ async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
         )
 
 
-
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
@@ -64,8 +63,7 @@ async def on_ready():
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
     await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-        .format(cliente))
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
 # Evento de mensaje recibido
@@ -98,9 +96,9 @@ async def on_message(message):
     if mensajeSeparado[1] == comandoCreate:
         await manejarComandoCreate(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoList:
-        await manejarComandoList(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoList(mensaje, autorMensaje)
     elif mensajeSeparado[1] == comandoNext:
-        await manejarComandoNext(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoNext(mensaje, autorMensaje)
     elif mensajeSeparado[1] == comandoDelete:
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoAdd:
@@ -108,9 +106,9 @@ async def on_message(message):
     elif mensajeSeparado[1] == comandoRemove:
         await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoHelp:
-        await manejarComandoHelp(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoHelp()
     elif mensajeSeparado[1] == comandoAll:
-        await manejarComandoAll(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoAll(autorMensaje)
     else:
         await message.channel.send(
             f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
@@ -157,7 +155,7 @@ async def on_reaction_add(reaction, user):
         await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Next] " + mensaje)
 
-        await manejarComandoNext(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoNext(mensaje, autorMensaje)
     elif emoji == '❌':
         mensaje += comandoDelete + " " + nombreCola
 

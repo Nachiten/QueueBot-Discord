@@ -4,7 +4,7 @@ from globalVariables import GlobalVariables
 from utils import esMod
 from utils import cantidadDeParametrosEs
 from utils import printearErrorSinPermisos
-from colas import Colas
+from clases.colas import Colas
 
 comandoList = Configs.comandoList
 prefijoBot = Configs.prefijoBot
@@ -12,7 +12,8 @@ prefijoBot = Configs.prefijoBot
 
 # Description: Muestra una cola por output-bot
 # Access: Only Mods
-async def manejarComandoList(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoList(mensaje, autorMensaje):
+
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoList)

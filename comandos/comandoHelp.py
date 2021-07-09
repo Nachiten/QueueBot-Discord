@@ -48,7 +48,7 @@ def generarMensajeEmbed():
 
 # Description: Mostrar mensaje de ayuda
 # Access: Everyone
-async def manejarComandoHelp(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoHelp():
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
     mensajeEmbed = generarMensajeEmbed()

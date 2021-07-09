@@ -3,7 +3,7 @@ from globalVariables import GlobalVariables
 
 from utils import esMod
 from utils import printearErrorSinPermisos
-from colas import Colas
+from clases.colas import Colas
 
 comandoAll = Configs.comandoAll
 prefijoBot = Configs.prefijoBot
@@ -12,11 +12,11 @@ imagenThumbnail = Configs.imagenThumbnail
 
 # Description: Mostrar todas las colas existentes
 # Access: Only Mods
-async def manejarComandoAll(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoAll(autorMensaje):
 
     # Verificacion de mod
     if not esMod(autorMensaje):
-        printearErrorSinPermisos(autorMensaje, comandoAll)
+        await printearErrorSinPermisos(autorMensaje, comandoAll)
         return
 
     canalSpamComandos = GlobalVariables.canalSpamComandos

@@ -5,9 +5,10 @@ from configs import Configs
 
 imagenThumbnail = Configs.imagenThumbnail
 
+
 # Clase estatica
 # Mantiene una lista de todas las colas del sistema
-class Colas():
+class Colas:
     # Las colas existentes del sitema
     colasActuales = []
 
@@ -48,11 +49,11 @@ class Colas():
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Todas las colas:",
-                                    color=discord.Color.purple())
+                                     color=discord.Color.purple())
         mensajeEmbed.set_thumbnail(url=imagenThumbnail)
         mensajeEmbed.add_field(name="Nombre de Cola | Cantidad de Miembros",
-                            value=mensaje,
-                            inline=False)
+                               value=mensaje,
+                               inline=False)
 
         return mensajeEmbed
 
@@ -72,7 +73,7 @@ class Colas():
     @classmethod
     def existeUsuarioEnCola(self, nombreUsuario, nombreCola):
         return self.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
-    
+
     @classmethod
     # Averigua si un mensaje pertenece a alguna cola de mensajes
     def esAlgunaReaccionDeCola(self, mensaje):
@@ -97,8 +98,3 @@ class Colas():
         await self.getColaPorNombre(nombreCola).enviarMensajeNext(canalOutputBot)
 
     # --- Son awaited porque envian mensajes ---
-
-
-    
-    
-    

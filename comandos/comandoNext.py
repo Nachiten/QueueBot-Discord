@@ -4,7 +4,7 @@ from globalVariables import GlobalVariables
 from utils import esMod
 from utils import cantidadDeParametrosEs
 from utils import printearErrorSinPermisos
-from colas import Colas
+from clases.colas import Colas
 
 comandoNext = Configs.comandoNext
 prefijoBot = Configs.prefijoBot
@@ -12,7 +12,7 @@ prefijoBot = Configs.prefijoBot
 
 # Description: Atender siguiente persona en una cola
 # Access: Only Mods
-async def manejarComandoNext(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoNext(mensaje, autorMensaje):
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoNext)
