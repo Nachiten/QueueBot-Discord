@@ -4,19 +4,19 @@ from globalVariables import GlobalVariables
 from utils import esMod
 from utils import cantidadDeParametrosEs
 from utils import printearErrorSinPermisos
-from clases.colas import Colas
+from colas import Colas
 
-comandoList = Configs.comandoList
+comandoDelete = Configs.comandoDelete
 prefijoBot = Configs.prefijoBot
 
 
-# Description: Muestra una cola por output-bot
+# Description: Eliminar una cola
 # Access: Only Mods
-async def manejarComandoList(mensaje, autorMensaje):
+async def manejarComandoDelete(mensaje, autorMensaje, tagAlAutor):
 
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoList)
+        await printearErrorSinPermisos(autorMensaje, comandoDelete)
         return
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
@@ -25,7 +25,9 @@ async def manejarComandoList(mensaje, autorMensaje):
 
     # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoList} nombreCola`")
+        await canalSpamComandos.send(
+            f"Sintaxis incorrecta, uso: {prefijoBot} {comandoDelete} nombreCola`."
+        )
         return
 
     nombreCola = parametrosMensaje[2]
@@ -33,4 +35,7 @@ async def manejarComandoList(mensaje, autorMensaje):
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
     else:
-        await Colas.enviarMensajeNuevoEnCola(nombreCola)
+        await Colas.eliminarMensajeEnCola(nombreCola)
+        Colas.quitarCola(nombreCola)
+        await canalSpamComandos.send(
+            f"{tagAlAutor} ha eliminado la cola **{nombreCola}**.")

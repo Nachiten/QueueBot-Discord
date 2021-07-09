@@ -3,7 +3,7 @@ from globalVariables import GlobalVariables
 
 from utils import esMod
 from utils import printearErrorSinPermisos
-from clases.colas import Colas
+from colas import Colas
 
 comandoAll = Configs.comandoAll
 prefijoBot = Configs.prefijoBot

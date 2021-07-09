@@ -4,30 +4,28 @@ from globalVariables import GlobalVariables
 from utils import esMod
 from utils import cantidadDeParametrosEs
 from utils import printearErrorSinPermisos
-from clases.colas import Colas
+from colas import Colas
 
-comandoNext = Configs.comandoNext
+comandoList = Configs.comandoList
 prefijoBot = Configs.prefijoBot
 
 
-# Description: Atender siguiente persona en una cola
+# Description: Muestra una cola por output-bot
 # Access: Only Mods
-async def manejarComandoNext(mensaje, autorMensaje):
+async def manejarComandoList(mensaje, autorMensaje):
+
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoNext)
+        await printearErrorSinPermisos(autorMensaje, comandoList)
         return
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
-    canalOutputBot = GlobalVariables.canalOutputBot
 
     parametrosMensaje = mensaje.split(" ", 5)
 
-    # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
+    # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(
-            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoNext} nombreCola`."
-        )
+        await canalSpamComandos.send(f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoList} nombreCola`")
         return
 
     nombreCola = parametrosMensaje[2]
@@ -35,4 +33,4 @@ async def manejarComandoNext(mensaje, autorMensaje):
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
     else:
-        await Colas.enviarMensajeNextEnCola(nombreCola, canalOutputBot)
+        await Colas.enviarMensajeNuevoEnCola(nombreCola)

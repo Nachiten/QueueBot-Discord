@@ -2,15 +2,15 @@ from configs import Configs
 from globalVariables import GlobalVariables
 
 from utils import cantidadDeParametrosEs
-from clases.colas import Colas
+from colas import Colas
 
-comandoAdd = Configs.comandoAdd
+comandoRemove = Configs.comandoRemove
 prefijoBot = Configs.prefijoBot
 
 
-# Description: Agregar una persona a una cola
+# Description: Eliminar una persona de una cola
 # Access: Everyone
-async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor):
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -18,7 +18,7 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
     # Solo debe haber tres parametros
     if not cantidadDeParametrosEs(3, parametrosMensaje):
         await canalSpamComandos.send(
-            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoAdd} nombreCola`."
+            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoRemove} nombreCola`."
         )
         return
 
@@ -27,11 +27,11 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
     else:
-        if Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
+        if not Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
             await canalSpamComandos.send(
-                f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
+                f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
         else:
-            Colas.agregarUsuarioACola(autorMensaje, nombreCola)
+            Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
             await canalSpamComandos.send(
-                f"{tagAlAutor} ha sido agregado a la cola **{nombreCola}**.")
+                f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
             await Colas.actualizarMensajeExistenteEnCola(nombreCola)

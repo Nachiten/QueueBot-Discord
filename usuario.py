@@ -1,4 +1,3 @@
-
 # Mantiene todos los datos sobre un usuario en una cola
 class Usuario:
     # Objeto de discord con los datos del usuario
