@@ -19,4 +19,6 @@ class Configs:
     comandoRemove = "remove"
     comandoHelp = "help"
     comandoAll = "all"
+    # Comando de debug (por eso no aparece en help)
+    comandoPrint = "print"
     imagenThumbnail = "https://i.imgur.com/LXStHiQ.png"

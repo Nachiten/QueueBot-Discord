@@ -12,6 +12,21 @@ class Colas:
     # Las colas existentes del sitema
     colasActuales = []
 
+    @classmethod
+    async def printeameLasColas(self, canalSpamComandos):
+        mensaje = "```\nNo hay colas."
+
+        if len(self.colasActuales) > 0:
+            mensaje = "```\n"
+
+        for unaCola in self.colasActuales:
+            mensaje += f"Nombre Cola: {unaCola.nombre}\n"
+            mensaje += f"Lista de usuarios:\n"
+            mensaje += unaCola.obtenerListaDeUsuarios()
+        mensaje += "\n```"
+
+        await canalSpamComandos.send(mensaje)
+
     # Agregar una nueva cola
     @classmethod
     def agregarCola(self, nombreCola):

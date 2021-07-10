@@ -20,6 +20,14 @@ class Cola:
     # Constructor
     def __init__(self, nombreCola):
         self.nombre = nombreCola
+        self.usuarios = []
+        self.mensajeEnviado = None
+
+    def obtenerListaDeUsuarios(self):
+        mensaje = ""
+        for unUsuario in self.usuarios:
+            mensaje += f"Nombre: {unUsuario.objetoUsuario.name}\n"
+        return mensaje
 
     # Agregar un usuario a la cola
     def agregarUsuario(self, usuario):

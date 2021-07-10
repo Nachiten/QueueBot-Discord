@@ -13,6 +13,7 @@ from comandoList import manejarComandoList
 from comandoNext import manejarComandoNext
 from comandoRemove import manejarComandoRemove
 from comandoHelp import manejarComandoHelp
+from comandoPrint import manejarComandoPrint
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -110,6 +111,8 @@ async def on_message(message):
         await manejarComandoHelp()
     elif mensajeSeparado[1] == comandoAll:
         await manejarComandoAll(autorMensaje)
+    elif mensajeSeparado[1] == "print":
+        await manejarComandoPrint(autorMensaje)
     else:
         await message.channel.send(
             f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
