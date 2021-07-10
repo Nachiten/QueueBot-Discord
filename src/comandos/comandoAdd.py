@@ -1,8 +1,8 @@
-from configs import Configs
-from globalVariables import GlobalVariables
+from src.configs.globalVariables import GlobalVariables
+from src.configs.configs import Configs
 
-from utils import cantidadDeParametrosEs
-from colas import Colas
+from src.utils.utils import cantidadDeParametrosEs
+from src.clases.colas import Colas
 
 comandoAdd = Configs.comandoAdd
 prefijoBot = Configs.prefijoBot

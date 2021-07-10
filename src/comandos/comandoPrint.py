@@ -1,7 +1,8 @@
-from colas import Colas
-from globalVariables import GlobalVariables
-from utils import esMod
-from utils import printearErrorSinPermisos
+from src.configs.globalVariables import GlobalVariables
+
+from src.clases.colas import Colas
+from src.utils.utils import esMod
+from src.utils.utils import printearErrorSinPermisos
 
 comandoPrint = "print"
 
