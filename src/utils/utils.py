@@ -14,7 +14,8 @@ def cantidadDeParametrosEs(numero, parametros):
 
 # Saber si un parametro solo son espacios y no es valido
 def stringEsValido(string):
-    return not (string == "" or string == " ")
+    stringSinEspacios = string.strip()
+    return not (stringSinEspacios == "" or stringSinEspacios == " ")
 
 
 # Verifica si un usuario tiene al menos un rango mod
