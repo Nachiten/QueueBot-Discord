@@ -12,7 +12,25 @@ class Colas:
     # Las colas existentes del sitema
     colasActuales = []
 
-    # Agregar una nueva cola
+    @classmethod
+    async def printeameLasColas(self, canalSpamComandos):
+        if len(self.colasActuales) == 0:
+            await canalSpamComandos.send("No hay colas.")
+            return
+
+        for unaCola in self.colasActuales:
+            await canalSpamComandos.send(f"Nombre Cola: {unaCola.nombre}\n")
+            await canalSpamComandos.send(f"Lista de usuarios:\n")
+            await unaCola.printearListaDeUsuarios(canalSpamComandos)
+
+    # Obtener una cola dado el nombre
+    @classmethod
+    def getColaPorNombre(self, nombreCola):
+        for unaCola in self.colasActuales:
+            if unaCola.nombre == nombreCola:
+                return unaCola
+        print("[ERROR] No deberia no poder encontrarse una cola existente.")
+
     @classmethod
     def agregarCola(self, nombreCola):
         self.colasActuales.append(Cola(nombreCola))
@@ -22,41 +40,15 @@ class Colas:
     def quitarCola(self, nombreCola):
         self.colasActuales.remove(self.getColaPorNombre(nombreCola))
 
-    # Obtener una cola dado el nombre
     @classmethod
-    def getColaPorNombre(self, nombreCola):
-        return self.colasActuales[self.indexDeCola(nombreCola)]
-
-    # Obtener el index de una cola dado el nombre
-    @classmethod
-    def indexDeCola(self, nombreCola):
-        index = 0
-
-        for unaCola in self.colasActuales:
-            if unaCola.nombre == nombreCola:
-                return index
-            index += 1
-        print("[ERROR] No se encontro una cola que si deberia.")
+    def agregarUsuarioACola(self, usuario, nombreCola, canalActual):
+        colaObtenida = self.getColaPorNombre(nombreCola)
+        print("Cola a la que le agrego usuario: " + colaObtenida.nombre)
+        colaObtenida.agregarUsuario(usuario, canalActual)
 
     @classmethod
-    def generarMensajeListandoColas(self):
-        mensaje = "No Hay ninguna cola."
-
-        if len(self.colasActuales) > 0:
-            mensaje = ""
-            for unaCola in self.colasActuales:
-                mensaje += str(unaCola[0]) + " | " + str(len(
-                    unaCola[1])) + "\n"
-
-        # Creacion de mensaje embed
-        mensajeEmbed = discord.Embed(title="Todas las colas:",
-                                     color=discord.Color.purple())
-        mensajeEmbed.set_thumbnail(url=imagenThumbnail)
-        mensajeEmbed.add_field(name="Nombre de Cola | Cantidad de Miembros",
-                               value=mensaje,
-                               inline=False)
-
-        return mensajeEmbed
+    def quitarUsuarioDeCola(self, usuario, nombreCola):
+        self.getColaPorNombre(nombreCola).quitarUsuario(usuario)
 
     @classmethod
     def existeCola(self, nombreCola):
@@ -64,16 +56,12 @@ class Colas:
                                  self.colasActuales)
 
     @classmethod
-    def agregarUsuarioACola(self, usuario, nombreCola):
-        self.getColaPorNombre(nombreCola).agregarUsuario(usuario)
-
-    @classmethod
-    def quitarUsuarioDeCola(self, usuario, nombreCola):
-        self.getColaPorNombre(nombreCola).quitarUsuario(usuario)
-
-    @classmethod
     def existeUsuarioEnCola(self, nombreUsuario, nombreCola):
-        return self.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
+        colaAUsar = self.getColaPorNombre(nombreCola)
+
+        print(colaAUsar.nombre)
+
+        return colaAUsar.existeUsuario(nombreUsuario)
 
     @classmethod
     # Averigua si un mensaje pertenece a alguna cola de mensajes
@@ -81,6 +69,31 @@ class Colas:
         return any(
             map(lambda unaCola: unaCola.perteneceElMensaje(mensaje),
                 self.colasActuales))
+
+    @classmethod
+    def generarMensajeListandoColas(self):
+        nombresColas = "No Hay ninguna cola."
+        cantidadUsuariosColas = "No Hay ninguna cola."
+
+        if len(self.colasActuales) > 0:
+            nombresColas = ""
+            cantidadUsuariosColas = ""
+            for unaCola in self.colasActuales:
+                nombresColas += f"{str(unaCola.nombre)}\n"
+                cantidadUsuariosColas += f"{str(unaCola.cantidadDeUsuarios())}\n"
+
+        # Creacion de mensaje embed
+        mensajeEmbed = discord.Embed(title="Todas las colas:",
+                                     color=discord.Color.purple())
+        mensajeEmbed.set_thumbnail(url=imagenThumbnail)
+        mensajeEmbed.add_field(name="Nombre de Cola",
+                               value=nombresColas,
+                               inline=True)
+        mensajeEmbed.add_field(name="Cantidad de Miembros",
+                               value=cantidadUsuariosColas,
+                               inline=True)
+
+        return mensajeEmbed
 
     # --- Son awaited porque envian mensajes ---
 
@@ -100,5 +113,3 @@ class Colas:
     async def enviarMensajeNextEnCola(self, nombreCola, canalOutputBot):
         await self.getColaPorNombre(nombreCola).enviarMensajeNext(
             canalOutputBot)
-
-    # --- Son awaited porque envian mensajes ---
