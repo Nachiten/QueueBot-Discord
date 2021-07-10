@@ -40,21 +40,26 @@ class Colas:
 
     @classmethod
     def generarMensajeListandoColas(self):
-        mensaje = "No Hay ninguna cola."
+        nombresColas = "No Hay ninguna cola."
+        cantidadUsuariosColas = "No Hay ninguna cola."
 
         if len(self.colasActuales) > 0:
-            mensaje = ""
+            nombresColas = ""
+            cantidadUsuariosColas = ""
             for unaCola in self.colasActuales:
-                mensaje += str(unaCola[0]) + " | " + str(len(
-                    unaCola[1])) + "\n"
+                nombresColas += f"{str(unaCola.nombre)}\n"
+                cantidadUsuariosColas += f"{str(unaCola.cantidadDeUsuarios())}\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Todas las colas:",
                                      color=discord.Color.purple())
         mensajeEmbed.set_thumbnail(url=imagenThumbnail)
-        mensajeEmbed.add_field(name="Nombre de Cola | Cantidad de Miembros",
-                               value=mensaje,
-                               inline=False)
+        mensajeEmbed.add_field(name="Nombre de Cola",
+                               value=nombresColas,
+                               inline=True)
+        mensajeEmbed.add_field(name="Cantidad de Miembros",
+                               value=cantidadUsuariosColas,
+                               inline=True)
 
         return mensajeEmbed
 
