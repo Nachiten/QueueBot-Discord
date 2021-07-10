@@ -37,6 +37,7 @@ comandoAll = Configs.comandoAll
 canalSpamComandos = None
 
 
+# Saber si un mensaje recibido tiene la sintaxis correcta
 async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
     if len(mensaje.split(" ", 7)) > 3:
         await canalSpamComandos.send(
@@ -53,6 +54,7 @@ async def on_ready():
     canalOutputBot = cliente.get_channel(canalOutputBotID)
     canalSpamComandos = cliente.get_channel(canalSpamComandosID)
 
+    # Seteo variables globales
     GlobalVariables.canalOutputBot = canalOutputBot
     GlobalVariables.canalSpamComandos = canalSpamComandos
 
@@ -65,13 +67,12 @@ async def on_ready():
         cliente))
     await canalOutputBot.send(
         "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-        .format(cliente))
+            .format(cliente))
 
 
 # Evento de mensaje recibido
 @cliente.event
 async def on_message(message):
-
     mensajeSeparado = message.content.split(" ", 5)
 
     # Si el mensaje es enviado por el bot, o no esta presente el prefijo

@@ -108,5 +108,3 @@ class Colas:
     async def enviarMensajeNextEnCola(cls, nombreCola, canalOutputBot):
         await cls.getColaPorNombre(nombreCola).enviarMensajeNext(
             canalOutputBot)
-
-    # --- Son awaited porque envian mensajes ---
