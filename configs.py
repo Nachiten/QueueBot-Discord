@@ -7,7 +7,7 @@ class Configs:
     # [AyudanteX, AyudanteY]
     rangosMOD = [863139319719526430, 863139445809086484]
     # Emojis utilizados
-    emojis = ['👎', '➡️', '❌']
+    emojis = ['👍', '👎', '➡️', '❌']
     # Como se debe invocar al bot
     prefijoBot = "!queue"
     # Aliases de comandos

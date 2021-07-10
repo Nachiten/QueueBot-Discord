@@ -74,10 +74,6 @@ async def on_message(message):
     if message.author == cliente.user:
         return
 
-    if message.content == "!printeameColas":
-        await Colas.printeameLasColas(canalSpamComandos)
-        return
-
     mensajeSeparado = message.content.split(" ", 5)
 
     # Si no me invocaron ignoro el mensaje
@@ -96,11 +92,9 @@ async def on_message(message):
     autorMensaje = message.author
     tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
-    
     print("[Mensaje recibido] " + mensaje)
 
     if mensajeSeparado[1] == comandoCreate:
-        print("Entrando en mensaje create")
         await manejarComandoCreate(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoList:
         await manejarComandoList(mensaje, autorMensaje)
@@ -109,7 +103,6 @@ async def on_message(message):
     elif mensajeSeparado[1] == comandoDelete:
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoAdd:
-        print("Entrando en mensaje add")
         await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoRemove:
         await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
@@ -137,13 +130,21 @@ async def on_reaction_add(reaction, user):
     tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
     # Variables necesarias
-    nombreCola = reaction.message.embeds[0].title.split(" ",2)[1].split(":", 1)[0]
+    nombreCola = reaction.message.embeds[0].title.split(" ",
+                                                        2)[1].split(":", 1)[0]
     emoji = reaction.emoji
 
     # Remuevo la reaccion generada por el usuario
     await reaction.remove(user)
 
-    if emoji == '👎':
+    if emoji == '👍':
+        mensaje += comandoAdd + " " + nombreCola
+
+        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
+        print("[Add] " + mensaje)
+
+        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
+    elif emoji == '👎':
         mensaje += comandoRemove + " " + nombreCola
 
         await chequearIntegridadDeMensaje(mensaje, autorMensaje)

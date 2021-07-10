@@ -21,14 +21,11 @@ class Cola:
     def __init__(self, nombreCola):
         self.nombre = nombreCola
 
-    async def printearListaDeUsuarios(self, canalSpamComandos):
-        for unUsuario in self.usuarios:
-            await canalSpamComandos.send(f"Nombre: {unUsuario.objetoUsuario.name}\n")
-
     # Agregar un usuario a la cola
-    def agregarUsuario(self, usuario, canalActual):
-        print(f"Agregando usuario {usuario.name} a cola {self.nombre} en el canal {canalActual}")
-        self.usuarios.append(Usuario(usuario, str(canalActual)))
+    def agregarUsuario(self, usuario):
+        self.usuarios.append(Usuario(
+            usuario,
+            "--"))  # TODO | Implementar el manejar en que canal se encuentra
 
     # Obtener un usuario por nombre
     def obtenerUsuario(self, usuario):
@@ -51,14 +48,15 @@ class Cola:
 
         # Si hay al menos un miembro, fijo el primero de la cola
         if len(miembrosCola) > 0:
-            siguienteMiembro = f"1) <@{str(miembrosCola[0].objetoUsuario.id)}> | Canal: {miembrosCola[0].canalActual}"
+            siguienteMiembro = "1) " + "<@" + str(
+                miembrosCola[0].objetoUsuario.id) + ">"
 
         # Si hay mas de un miembro, fijo los a continuacion
         if len(miembrosCola) > 1:
             miembrosAContinuacion = ""
 
             for index in range(1, len(miembrosCola)):
-                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> | Canal: {miembrosCola[index].canalActual}\n"
+                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}>\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Cola " + self.nombre + ":",
@@ -79,15 +77,16 @@ class Cola:
 
     # Saber si existre un usuario dado
     def existeUsuario(self, usuario):
-        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario, self.usuarios)
+        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario,
+                              self.usuarios)
 
     # Cantidad total de usuarios
     def cantidadDeUsuarios(self):
         return len(self.usuarios)
 
     # Obtener y quitar de la lista de usuarios el siguiente
-    def obtenerYQuitarSiguienteUsuario(self):
-        return self.usuarios.pop(0)
+    def obtenerYQuitarIdDeSiguiente(self):
+        return self.usuarios.pop(0).objetoUsuario.id
 
     # Solo leer sin tocar el siguiente de la cola
     def obtenerIdDeSiguiente(self):
@@ -107,17 +106,14 @@ class Cola:
             return
         else:
             # Calculo los siguientes para printearlos
-            siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
-
-            siguienteEnLaLista = f"<@{str(siguienteUsuario.objetoUsuario.id)}>"
+            siguienteEnLaLista = f"<@{str(self.obtenerYQuitarIdDeSiguiente())}>"
             siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
                 siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: <@{str(self.obtenerIdDeSiguiente())}>."
 
             await canalOutputBot.send(
-                f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"
-                f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
+                f"{siguienteEnLaLista} es tu turno en [Canal X] en la cola **{self.nombre}**. {siguienteAlSiguienteEnLaLista}"
             )
             await self.actualizarMensajeExistente()
 
