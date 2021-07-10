@@ -1,20 +1,22 @@
 # import os
 import discord
 
-from configs import Configs
-from globalVariables import GlobalVariables
-from colas import Colas
-from discordToken import DISCORD_TOKEN
+from src.configs.globalVariables import GlobalVariables
+from configs.configs import Configs
 
-from comandoCreate import manejarComandoCreate
-from comandoAll import manejarComandoAll
-from comandoAdd import manejarComandoAdd
-from comandoDelete import manejarComandoDelete
-from comandoList import manejarComandoList
-from comandoNext import manejarComandoNext
-from comandoRemove import manejarComandoRemove
-from comandoHelp import manejarComandoHelp
-from comandoPrint import manejarComandoPrint
+from src.clases.colas import Colas
+
+from src.comandos.comandoCreate import manejarComandoCreate
+from src.comandos.comandoAll import manejarComandoAll
+from src.comandos.comandoAdd import manejarComandoAdd
+from src.comandos.comandoDelete import manejarComandoDelete
+from src.comandos.comandoList import manejarComandoList
+from src.comandos.comandoNext import manejarComandoNext
+from src.comandos.comandoRemove import manejarComandoRemove
+from src.comandos.comandoHelp import manejarComandoHelp
+from src.comandos.comandoPrint import manejarComandoPrint
+
+from src.configs.discordToken import DISCORD_TOKEN
 
 # Datos administrativos del bot
 cliente = discord.Client()

@@ -1,7 +1,7 @@
 import discord
 
-from globalVariables import GlobalVariables
-from configs import Configs
+from src.configs.globalVariables import GlobalVariables
+from src.configs.configs import Configs
 
 PREFIX = Configs.prefijoBot
 COMANDO_ADD = Configs.comandoAdd

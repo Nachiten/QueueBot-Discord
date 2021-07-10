@@ -1,5 +1,5 @@
-from configs import Configs
-from globalVariables import GlobalVariables
+from src.configs.globalVariables import GlobalVariables
+from src.configs.configs import Configs
 
 # Configs
 rangosMOD = Configs.rangosMOD

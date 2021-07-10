@@ -1,8 +1,10 @@
 import discord
 
-from usuario import Usuario
-from globalVariables import GlobalVariables
-from configs import Configs
+from src.configs.globalVariables import GlobalVariables
+from src.configs.configs import Configs
+
+from src.clases.usuario import Usuario
+
 
 emojis = Configs.emojis
 imagenThumbnail = Configs.imagenThumbnail
