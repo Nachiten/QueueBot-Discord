@@ -10,7 +10,7 @@ prefijoBot = Configs.prefijoBot
 
 # Description: Agregar una persona a una cola
 # Access: Everyone
-async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState):
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
     parametrosMensaje = mensaje.split(" ", 5)
@@ -31,7 +31,10 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor):
             await canalSpamComandos.send(
                 f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
         else:
-            Colas.agregarUsuarioACola(autorMensaje, nombreCola)
-            await canalSpamComandos.send(
-                f"{tagAlAutor} ha sido agregado a la cola **{nombreCola}**.")
-            await Colas.actualizarMensajeExistenteEnCola(nombreCola)
+            if voiceState == None:
+                await canalSpamComandos.send(f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de soporte!")
+            else:
+                Colas.agregarUsuarioACola(autorMensaje, nombreCola, voiceState.channel)
+                await canalSpamComandos.send(
+                    f"{tagAlAutor} ha sido agregado a la cola **{nombreCola}**.")
+                await Colas.actualizarMensajeExistenteEnCola(nombreCola)
