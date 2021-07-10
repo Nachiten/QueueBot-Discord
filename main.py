@@ -71,14 +71,11 @@ async def on_ready():
 # Evento de mensaje recibido
 @cliente.event
 async def on_message(message):
-    # Cancelo la operacion si el mensaje es enviado por el mismo bot
-    if message.author == cliente.user:
-        return
 
     mensajeSeparado = message.content.split(" ", 5)
 
-    # Si no me invocaron ignoro el mensaje
-    if not mensajeSeparado[0] == prefijoBot:
+    # Si el mensaje es enviado por el bot, o no esta presente el prefijo
+    if message.author == cliente.user or not mensajeSeparado[0] == prefijoBot:
         return
 
     # Si no inserto ningun segundo parametro
@@ -104,7 +101,7 @@ async def on_message(message):
     elif mensajeSeparado[1] == comandoDelete:
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoAdd:
-        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, message.author.voice)
     elif mensajeSeparado[1] == comandoRemove:
         await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
     elif mensajeSeparado[1] == comandoHelp:
@@ -146,7 +143,7 @@ async def on_reaction_add(reaction, user):
         await chequearIntegridadDeMensaje(mensaje, autorMensaje)
         print("[Add] " + mensaje)
 
-        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor)
+        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, user.voice)
     elif emoji == '👎':
         mensaje += comandoRemove + " " + nombreCola
 

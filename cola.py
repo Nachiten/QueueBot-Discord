@@ -10,17 +10,14 @@ imagenThumbnail = Configs.imagenThumbnail
 
 # Estructura sobre una cola del sistema
 class Cola:
-    # Nombre de la cola
-    nombre = "DefaultName"
-    # Lista de usuarios en la cola
-    usuarios = []
-    # Mensaje enviado de la cola
-    mensajeEnviado = None
 
     # Constructor
     def __init__(self, nombreCola):
+        # Nombre de la cola
         self.nombre = nombreCola
+        # Lista de usuarios en la cola
         self.usuarios = []
+        # Mensaje enviado de la cola
         self.mensajeEnviado = None
 
     def obtenerListaDeUsuarios(self):
@@ -30,10 +27,14 @@ class Cola:
         return mensaje
 
     # Agregar un usuario a la cola
-    def agregarUsuario(self, usuario):
-        self.usuarios.append(Usuario(
-            usuario,
-            "--"))  # TODO | Implementar el manejar en que canal se encuentra
+    def agregarUsuario(self, usuario, canalActual):
+        canalDeUsuario = canalActual
+        
+        if canalActual == None:
+            canalDeUsuario = "CanalNoValido"
+            print("[ERROR] No deberia llegar un canal no valido a esta instancia")
+            
+        self.usuarios.append(Usuario(usuario, str(canalDeUsuario)))
 
     # Obtener un usuario por nombre
     def obtenerUsuario(self, usuario):
@@ -56,15 +57,14 @@ class Cola:
 
         # Si hay al menos un miembro, fijo el primero de la cola
         if len(miembrosCola) > 0:
-            siguienteMiembro = "1) " + "<@" + str(
-                miembrosCola[0].objetoUsuario.id) + ">"
+            siguienteMiembro = f"1) <@{str(miembrosCola[0].objetoUsuario.id)}> | Canal: {miembrosCola[0].canalActual}"
 
         # Si hay mas de un miembro, fijo los a continuacion
         if len(miembrosCola) > 1:
             miembrosAContinuacion = ""
 
             for index in range(1, len(miembrosCola)):
-                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}>\n"
+                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> | Canal: {miembrosCola[index].canalActual}\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Cola " + self.nombre + ":",

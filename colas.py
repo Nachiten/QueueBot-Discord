@@ -84,8 +84,8 @@ class Colas:
                                  self.colasActuales)
 
     @classmethod
-    def agregarUsuarioACola(self, usuario, nombreCola):
-        self.getColaPorNombre(nombreCola).agregarUsuario(usuario)
+    def agregarUsuarioACola(self, usuario, nombreCola, canalActual):
+        self.getColaPorNombre(nombreCola).agregarUsuario(usuario, canalActual)
 
     @classmethod
     def quitarUsuarioDeCola(self, usuario, nombreCola):
