@@ -1,9 +1,10 @@
-import os
+# import os
 import discord
 
 from configs import Configs
 from globalVariables import GlobalVariables
 from colas import Colas
+from token import token
 
 from comandoCreate import manejarComandoCreate
 from comandoAll import manejarComandoAll
@@ -17,7 +18,6 @@ from comandoPrint import manejarComandoPrint
 
 # Datos administrativos del bot
 cliente = discord.Client()
-TOKEN = os.environ['TOKEN']
 
 # Configs
 canalSpamComandosID = Configs.canalSpamComandosID
@@ -171,4 +171,4 @@ async def on_reaction_add(reaction, user):
 
 
 # Corre el bot
-cliente.run(TOKEN)
+cliente.run(token)

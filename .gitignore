@@ -1,0 +1,12 @@
+# Python virtual enviroment
+venv/
+# Binaries
+__pycache__/
+# PyCharm config files
+.idea/
+# Replit breakpoints
+.breakpoints
+# Enviroment variables
+.env
+# Token variable
+token.py
