@@ -4,7 +4,7 @@ import discord
 from configs import Configs
 from globalVariables import GlobalVariables
 from colas import Colas
-from token import token
+from discordToken import DISCORD_TOKEN
 
 from comandoCreate import manejarComandoCreate
 from comandoAll import manejarComandoAll
@@ -168,4 +168,4 @@ async def on_reaction_add(reaction, user):
 
 
 # Corre el bot
-cliente.run(token)
+cliente.run(DISCORD_TOKEN)

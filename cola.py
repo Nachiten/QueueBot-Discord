@@ -93,12 +93,12 @@ class Cola:
         return len(self.usuarios)
 
     # Obtener y quitar de la lista de usuarios el siguiente
-    def obtenerYQuitarIdDeSiguiente(self):
-        return self.usuarios.pop(0).objetoUsuario.id
+    def obtenerYQuitarSiguienteUsuario(self):
+        return self.usuarios.pop(0)
 
     # Solo leer sin tocar el siguiente de la cola
-    def obtenerIdDeSiguiente(self):
-        return self.usuarios[0].objetoUsuario.id
+    def obtenerSiguienteUsuario(self):
+        return self.usuarios[0].objetoUsuario
 
     # Saber si un mensaje pertenece a esta cola
     def perteneceElMensaje(self, mensaje):
@@ -114,14 +114,17 @@ class Cola:
             return
         else:
             # Calculo los siguientes para printearlos
-            siguienteEnLaLista = f"<@{str(self.obtenerYQuitarIdDeSiguiente())}>"
+            siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
+
+            siguienteEnLaLista = f"<@{str(siguienteUsuario.objetoUsuario.id)}>"
             siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
-                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: <@{str(self.obtenerIdDeSiguiente())}>."
+                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: <@{str(self.obtenerSiguienteUsuario().id)}>."
 
             await canalOutputBot.send(
-                f"{siguienteEnLaLista} es tu turno en [Canal X] en la cola **{self.nombre}**. {siguienteAlSiguienteEnLaLista}"
+                f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"
+                f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
             )
             await self.actualizarMensajeExistente()
 

@@ -9,4 +9,4 @@ __pycache__/
 # Enviroment variables
 .env
 # Token variable
-token.py
+discordToken.py
