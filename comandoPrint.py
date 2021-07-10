@@ -5,6 +5,7 @@ from utils import printearErrorSinPermisos
 
 comandoPrint = "print"
 
+
 async def manejarComandoPrint(autorMensaje):
     canalSpamComandos = GlobalVariables.canalSpamComandos
 

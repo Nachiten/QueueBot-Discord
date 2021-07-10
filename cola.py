@@ -29,11 +29,11 @@ class Cola:
     # Agregar un usuario a la cola
     def agregarUsuario(self, usuario, canalActual):
         canalDeUsuario = canalActual
-        
-        if canalActual == None:
+
+        if canalActual is None:
             canalDeUsuario = "CanalNoValido"
             print("[ERROR] No deberia llegar un canal no valido a esta instancia")
-            
+
         self.usuarios.append(Usuario(usuario, str(canalDeUsuario)))
 
     # Obtener un usuario por nombre
@@ -139,7 +139,7 @@ class Cola:
         mensajeDeCola = self.mensajeEnviado
 
         # Checkeo si existe un mensaje anterior
-        if not mensajeDeCola == None:
+        if mensajeDeCola is not None:
             # Lo borro
             await mensajeDeCola.delete()
 
@@ -159,14 +159,14 @@ class Cola:
         mensajeDeCola = self.mensajeEnviado
 
         # Checkeo que no sea null para evitar excepciones
-        if not mensajeDeCola == None:
+        if mensajeDeCola is not None:
             # Edito el mensaje
             await mensajeDeCola.edit(embed=embedCompleto)
 
     # Eliminar el mensaje existente sobre la cola
     async def eliminarMensaje(self):
         # Checkeo que no sea null para evitar excepciones
-        if not self.mensajeEnviado == None:
+        if self.mensajeEnviado is not  None:
             # Borro el mensaje
             await self.mensajeEnviado.delete()
 

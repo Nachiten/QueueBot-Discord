@@ -31,8 +31,9 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState):
             await canalSpamComandos.send(
                 f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
         else:
-            if voiceState == None:
-                await canalSpamComandos.send(f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de soporte!")
+            if voiceState is None:
+                await canalSpamComandos.send(f"{tagAlAutor} para unirte a la cola necesitas estar conectado "
+                                             f"en algun canal de soporte!")
             else:
                 Colas.agregarUsuarioACola(autorMensaje, nombreCola, voiceState.channel)
                 await canalSpamComandos.send(
