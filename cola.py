@@ -20,12 +20,6 @@ class Cola:
         # Mensaje enviado de la cola
         self.mensajeEnviado = None
 
-    def obtenerListaDeUsuarios(self):
-        mensaje = ""
-        for unUsuario in self.usuarios:
-            mensaje += f"Nombre: {unUsuario.objetoUsuario.name}\n"
-        return mensaje
-
     # Agregar un usuario a la cola
     def agregarUsuario(self, usuario, canalActual):
         canalDeUsuario = canalActual
@@ -36,15 +30,42 @@ class Cola:
 
         self.usuarios.append(Usuario(usuario, str(canalDeUsuario)))
 
+    # Quitar un usuario de la cola
+    def quitarUsuario(self, usuario):
+        self.usuarios.remove(self.obtenerUsuario(usuario))
+
+    # Saber si existre un usuario dado
+    def existeUsuario(self, usuario):
+        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario,
+                              self.usuarios)
+
     # Obtener un usuario por nombre
     def obtenerUsuario(self, usuario):
         return list(
             filter(lambda unUsuario: unUsuario.objetoUsuario == usuario,
                    self.usuarios))[0]
 
-    # Quitar un usuario de la cola
-    def quitarUsuario(self, usuario):
-        self.usuarios.remove(self.obtenerUsuario(usuario))
+    def obtenerListaDeUsuarios(self):
+        mensaje = ""
+        for unUsuario in self.usuarios:
+            mensaje += f"Nombre: {unUsuario.objetoUsuario.name}\n"
+        return mensaje
+
+    # Cantidad total de usuarios
+    def cantidadDeUsuarios(self):
+        return len(self.usuarios)
+
+    # Obtener y quitar de la lista de usuarios el siguiente
+    def obtenerYQuitarSiguienteUsuario(self):
+        return self.usuarios.pop(0)
+
+    # Solo leer sin tocar el siguiente de la cola
+    def obtenerSiguienteUsuario(self):
+        return self.usuarios[0].objetoUsuario
+
+    # Saber si un mensaje pertenece a esta cola
+    def perteneceElMensaje(self, mensaje):
+        return mensaje.id == self.mensajeEnviado.id
 
     # Generar el mensaje embed a enviar
     def generarMensajeEmbed(self):
@@ -82,27 +103,6 @@ class Cola:
         )
 
         return mensajeEmbed
-
-    # Saber si existre un usuario dado
-    def existeUsuario(self, usuario):
-        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario,
-                              self.usuarios)
-
-    # Cantidad total de usuarios
-    def cantidadDeUsuarios(self):
-        return len(self.usuarios)
-
-    # Obtener y quitar de la lista de usuarios el siguiente
-    def obtenerYQuitarSiguienteUsuario(self):
-        return self.usuarios.pop(0)
-
-    # Solo leer sin tocar el siguiente de la cola
-    def obtenerSiguienteUsuario(self):
-        return self.usuarios[0].objetoUsuario
-
-    # Saber si un mensaje pertenece a esta cola
-    def perteneceElMensaje(self, mensaje):
-        return mensaje.id == self.mensajeEnviado.id
 
     # --- Son async porque envian mensajes ---
 
@@ -166,8 +166,6 @@ class Cola:
     # Eliminar el mensaje existente sobre la cola
     async def eliminarMensaje(self):
         # Checkeo que no sea null para evitar excepciones
-        if self.mensajeEnviado is not  None:
+        if self.mensajeEnviado is not None:
             # Borro el mensaje
             await self.mensajeEnviado.delete()
-
-    # --- Son async porque envian mensajes ---

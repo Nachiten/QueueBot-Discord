@@ -40,18 +40,11 @@ class Colas:
     # Obtener una cola dado el nombre
     @classmethod
     def getColaPorNombre(cls, nombreCola):
-        return cls.colasActuales[cls.indexDeCola(nombreCola)]
+        return list(filter(lambda unaCola: unaCola.nombre == nombreCola, cls.colasActuales))[0]
 
-    # Obtener el index de una cola dado el nombre
     @classmethod
-    def indexDeCola(cls, nombreCola):
-        index = 0
-
-        for unaCola in cls.colasActuales:
-            if unaCola.nombre == nombreCola:
-                return index
-            index += 1
-        print("[ERROR] No se encontro una cola que si deberia.")
+    def existeCola(cls, nombreCola):
+        return nombreCola in map(lambda unaCola: unaCola.nombre, cls.colasActuales)
 
     @classmethod
     def generarMensajeListandoColas(cls):
@@ -77,11 +70,6 @@ class Colas:
                                inline=True)
 
         return mensajeEmbed
-
-    @classmethod
-    def existeCola(cls, nombreCola):
-        return nombreCola in map(lambda unaCola: unaCola.nombre,
-                                 cls.colasActuales)
 
     @classmethod
     def agregarUsuarioACola(cls, usuario, nombreCola, canalActual):
