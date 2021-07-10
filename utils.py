@@ -22,6 +22,7 @@ def esMod(unUsuario):
     return any(map(lambda unRol: unRol.id in rangosMOD, unUsuario.roles))
 
 
+# Printea error cuando un usuario no tiene permisos para un comando
 async def printearErrorSinPermisos(autorMensaje, nombreComando):
     canalSpamComandos = GlobalVariables.canalSpamComandos
     print("[PermissionError] El usuario " + autorMensaje.name +
