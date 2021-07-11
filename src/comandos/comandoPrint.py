@@ -15,4 +15,4 @@ async def manejarComandoPrint(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoPrint)
         return
 
-    await Colas.printeameLasColas(canalSpamComandos)
+    await Colas.printearColas(canalSpamComandos)

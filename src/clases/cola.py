@@ -47,6 +47,7 @@ class Cola:
             filter(lambda unUsuario: unUsuario.objetoUsuario == usuario,
                    self.usuarios))[0]
 
+    # Generar lista de todos los usuarios
     def obtenerListaDeUsuarios(self):
         mensaje = ""
         for unUsuario in self.usuarios:

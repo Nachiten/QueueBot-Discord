@@ -13,21 +13,6 @@ class Colas:
     # Las colas existentes del sitema
     colasActuales = []
 
-    @classmethod
-    async def printeameLasColas(cls, canalSpamComandos):
-        mensaje = "```\nNo hay colas."
-
-        if len(cls.colasActuales) > 0:
-            mensaje = "```\n"
-
-        for unaCola in cls.colasActuales:
-            mensaje += f"Nombre Cola: {unaCola.nombre}\n"
-            mensaje += f"Lista de usuarios:\n"
-            mensaje += unaCola.obtenerListaDeUsuarios()
-        mensaje += "\n```"
-
-        await canalSpamComandos.send(mensaje)
-
     # Agregar una nueva cola
     @classmethod
     def agregarCola(cls, nombreCola):
@@ -46,6 +31,33 @@ class Colas:
     @classmethod
     def existeCola(cls, nombreCola):
         return nombreCola in map(lambda unaCola: unaCola.nombre, cls.colasActuales)
+
+    @classmethod
+    def agregarUsuarioACola(cls, usuario, nombreCola, canalActual):
+        cls.getColaPorNombre(nombreCola).agregarUsuario(usuario, canalActual)
+
+    @classmethod
+    def quitarUsuarioDeCola(cls, usuario, nombreCola):
+        cls.getColaPorNombre(nombreCola).quitarUsuario(usuario)
+
+    @classmethod
+    def existeUsuarioEnCola(cls, nombreUsuario, nombreCola):
+        return cls.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
+
+    @classmethod
+    # Averigua si un mensaje pertenece a alguna cola de mensajes
+    def esAlgunaReaccionDeCola(cls, mensaje):
+        return any(
+            map(lambda unaCola: unaCola.perteneceElMensaje(mensaje),
+                cls.colasActuales))
+
+    @classmethod
+    def cantidadDeColas(cls):
+        return len(cls.colasActuales)
+
+    @classmethod
+    def eliminarTodasLasColas(cls):
+        cls.colasActuales = []
 
     @classmethod
     def generarMensajeListandoColas(cls):
@@ -73,23 +85,19 @@ class Colas:
         return mensajeEmbed
 
     @classmethod
-    def agregarUsuarioACola(cls, usuario, nombreCola, canalActual):
-        cls.getColaPorNombre(nombreCola).agregarUsuario(usuario, canalActual)
+    async def printearColas(cls, canalSpamComandos):
+        mensaje = "```\nNo hay colas."
 
-    @classmethod
-    def quitarUsuarioDeCola(cls, usuario, nombreCola):
-        cls.getColaPorNombre(nombreCola).quitarUsuario(usuario)
+        if len(cls.colasActuales) > 0:
+            mensaje = "```\n"
 
-    @classmethod
-    def existeUsuarioEnCola(cls, nombreUsuario, nombreCola):
-        return cls.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
+        for unaCola in cls.colasActuales:
+            mensaje += f"Nombre Cola: {unaCola.nombre}\n"
+            mensaje += f"Lista de usuarios:\n"
+            mensaje += unaCola.obtenerListaDeUsuarios()
+        mensaje += "\n```"
 
-    @classmethod
-    # Averigua si un mensaje pertenece a alguna cola de mensajes
-    def esAlgunaReaccionDeCola(cls, mensaje):
-        return any(
-            map(lambda unaCola: unaCola.perteneceElMensaje(mensaje),
-                cls.colasActuales))
+        await canalSpamComandos.send(mensaje)
 
     # --- Son awaited porque envian mensajes ---
 
