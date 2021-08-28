@@ -1,8 +1,8 @@
 class Configs:
     # Canal donde se le enviaran comandos al bot
-    canalSpamComandosID = 862383126885695489
+    canalSpamComandosID = 881172995316547624
     # Canal donde el bot enviara sus mensajes sobre la cola
-    canalOutputBotID = 862383158971990036
+    canalOutputBotID = 881172982343561276
     # Ids de los rangos de moderacion que tendran permisos totales
     # [AyudanteX, AyudanteY]
     rangosMOD = [863139319719526430, 863139445809086484]

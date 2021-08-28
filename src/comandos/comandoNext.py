@@ -13,7 +13,6 @@ prefijoBot = Configs.prefijoBot
 # Description: Atender siguiente persona en una cola
 # Access: Only Mods
 async def manejarComandoNext(mensaje, autorMensaje):
-
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoNext)

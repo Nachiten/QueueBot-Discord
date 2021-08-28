@@ -32,7 +32,7 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor):
 
     nombreCola = parametrosMensaje[2]
 
-    if (Colas.existeCola(nombreCola)):
+    if Colas.existeCola(nombreCola):
         await canalSpamComandos.send(
             f"Ya existe una cola con el nombre **{nombreCola}**!")
     else:

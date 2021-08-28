@@ -5,7 +5,6 @@ from src.configs.configs import Configs
 
 from src.clases.usuario import Usuario
 
-
 emojis = Configs.emojis
 imagenThumbnail = Configs.imagenThumbnail
 
@@ -47,7 +46,6 @@ class Cola:
             filter(lambda unUsuario: unUsuario.objetoUsuario == usuario,
                    self.usuarios))[0]
 
-    # Generar lista de todos los usuarios
     def obtenerListaDeUsuarios(self):
         mensaje = ""
         for unUsuario in self.usuarios:
@@ -88,7 +86,8 @@ class Cola:
             miembrosAContinuacion = ""
 
             for index in range(1, len(miembrosCola)):
-                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> | Canal: {miembrosCola[index].canalActual}\n"
+                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> |" \
+                                         f" Canal: {miembrosCola[index].canalActual}\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Cola " + self.nombre + ":",
@@ -123,7 +122,8 @@ class Cola:
             siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
-                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: <@{str(self.obtenerSiguienteUsuario().id)}>."
+                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: " \
+                                                f"<@{str(self.obtenerSiguienteUsuario().id)}>."
 
             await canalOutputBot.send(
                 f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"

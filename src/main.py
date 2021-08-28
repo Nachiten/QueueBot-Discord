@@ -1,4 +1,3 @@
-# import os
 import discord
 
 from src.configs.globalVariables import GlobalVariables
@@ -39,14 +38,6 @@ comandoAll = Configs.comandoAll
 canalSpamComandos = None
 
 
-# Saber si un mensaje recibido tiene la sintaxis correcta
-async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
-    if len(mensaje.split(" ", 7)) > 3:
-        await canalSpamComandos.send(
-            f"**[Error]** Ha ocurrido un error al procesar la solicitud de {str(autorMensaje)}. Por favor intente nuevamente."
-        )
-
-
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
@@ -68,8 +59,7 @@ async def on_ready():
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
     await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-            .format(cliente))
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
 # Evento de mensaje recibido
@@ -168,6 +158,15 @@ async def on_reaction_add(reaction, user):
         print("[Delete] " + mensaje)
 
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
+
+
+# Saber si un mensaje recibido tiene la sintaxis correcta
+async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
+    if len(mensaje.split(" ", 7)) > 3:
+        await canalSpamComandos.send(
+            f"**[Error]** Ha ocurrido un error al procesar la solicitud de {str(autorMensaje)}"
+            f". Por favor intente nuevamente."
+        )
 
 
 # Corre el bot
