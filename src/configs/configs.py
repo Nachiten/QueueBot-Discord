@@ -7,12 +7,12 @@ class Configs:
     # ### Campos que deben estar seteados como Envarioment (.env) ### #
     # Ubicacion de .env, esta misma carpeta
 
+    # Discord Token | String | Token unico del bot de dicord
+    DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
     # Canal Spam Comandos | Int | Canal donde se le enviaran comandos al bot
     canalSpamComandosID = os.environ["canalSpamComandosID"]
     # Canal Output Bot | Int | Canal donde el bot enviara sus mensajes sobre la cola
     canalOutputBotID = os.environ["canalOutputBotID"]
-    # Discord Token | String | Token unico del bot de dicord
-    DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
     # Rangos Mod | [Int] | Ids de los rangos de moderacion que tendran permisos totales
     rangosMOD = os.environ["rangosMOD"].split(" ")
 
