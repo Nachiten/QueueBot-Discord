@@ -1,0 +1,36 @@
+import os
+
+class Configs:
+
+    # ############################################################### #
+
+    # ### Campos que deben estar seteados como Envarioment (.env) ### #
+    # Ubicacion de .env, esta misma carpeta
+
+    # Canal Spam Comandos | Int | Canal donde se le enviaran comandos al bot
+    canalSpamComandosID = os.environ["canalSpamComandosID"]
+    # Canal Output Bot | Int | Canal donde el bot enviara sus mensajes sobre la cola
+    canalOutputBotID = os.environ["canalOutputBotID"]
+    # Discord Token | String | Token unico del bot de dicord
+    DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
+    # Rangos Mod | [Int] | Ids de los rangos de moderacion que tendran permisos totales
+    rangosMOD = os.environ["rangosMOD"].split(" ")
+
+    # ############################################################### #
+
+    # Emojis utilizados
+    emojis = ['👍', '👎', '➡️', '❌']
+    # Como se debe invocar al bot
+    prefijoBot = "!queue"
+    # Aliases de comandos
+    comandoCreate = "create"
+    comandoList = "list"
+    comandoNext = "next"
+    comandoDelete = "delete"
+    comandoAdd = "add"
+    comandoRemove = "remove"
+    comandoHelp = "help"
+    comandoAll = "all"
+    # Comando de debug (por eso no aparece en help)
+    comandoPrint = "print"
+    imagenThumbnail = "https://i.imgur.com/LXStHiQ.png"
