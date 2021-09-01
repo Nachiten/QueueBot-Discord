@@ -9,4 +9,4 @@ __pycache__/
 # Enviroment variables
 .env
 # Token variable
-src/configs/discordToken.py
+src/configs/configs.py

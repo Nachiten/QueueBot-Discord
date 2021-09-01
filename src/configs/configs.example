@@ -1,11 +1,16 @@
+# Renombrar archivo a configs.py
+# Completar los campos faltantes
+
 class Configs:
-    # Canal donde se le enviaran comandos al bot
-    canalSpamComandosID = 881172995316547624
-    # Canal donde el bot enviara sus mensajes sobre la cola
-    canalOutputBotID = 881172982343561276
-    # Ids de los rangos de moderacion que tendran permisos totales
+    # Canal Spam Comandos | Canal donde se le enviaran comandos al bot
+    canalSpamComandosID = 0 # COMPLETAR
+    # Canal Output Bot | Canal donde el bot enviara sus mensajes sobre la cola
+    canalOutputBotID = 0 # COMPLETAR
+    # Discord Token | Token unico del bot de dicord
+    DISCORD_TOKEN = "" # COMPLETAR
+    # Rango sMOD | Ids de los rangos de moderacion que tendran permisos totales sobre el bot
     # [AyudanteX, AyudanteY]
-    rangosMOD = [863139319719526430, 863139445809086484]
+    rangosMOD = [] # Completar
     # Emojis utilizados
     emojis = ['👍', '👎', '➡️', '❌']
     # Como se debe invocar al bot

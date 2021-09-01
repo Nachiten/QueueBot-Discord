@@ -15,8 +15,6 @@ from src.comandos.comandoRemove import manejarComandoRemove
 from src.comandos.comandoHelp import manejarComandoHelp
 from src.comandos.comandoPrint import manejarComandoPrint
 
-from src.configs.discordToken import DISCORD_TOKEN
-
 # Datos administrativos del bot
 cliente = discord.Client()
 
@@ -170,4 +168,4 @@ async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
 
 
 # Corre el bot
-cliente.run(DISCORD_TOKEN)
+cliente.run(Configs.DISCORD_TOKEN)
