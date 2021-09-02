@@ -1,10 +1,12 @@
 FROM python:3.8-slim-buster
 
+RUN pip install poetry==1.1.8
+
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
+COPY pyproject.toml poetry.lock ./
+RUN poetry install
 
 COPY . .
 
-CMD ["python3", "src/main.py"]
+CMD ["poetry", "run", "python", "src/main.py"]
