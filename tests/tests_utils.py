@@ -1,6 +1,6 @@
 from unittest import TestCase
-from src.utils.utils import stringEsValido
-from src.utils.utils import cantidadDeParametrosEs
+from utils.utils import stringEsValido
+from utils.utils import cantidadDeParametrosEs
 
 
 # Corre antes de iniciar los tests
