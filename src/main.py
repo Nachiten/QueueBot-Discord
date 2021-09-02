@@ -1,6 +1,6 @@
 import discord
 
-from src.configs.globalVariables import GlobalVariables
+from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 from src.clases.colas import Colas
