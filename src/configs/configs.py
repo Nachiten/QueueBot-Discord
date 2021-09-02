@@ -10,11 +10,11 @@ class Configs:
     # Discord Token | String | Token unico del bot de dicord
     DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
     # Canal Spam Comandos | Int | Canal donde se le enviaran comandos al bot
-    canalSpamComandosID = os.environ["canalSpamComandosID"]
+    canalSpamComandosID = int(os.environ["canalSpamComandosID"])
     # Canal Output Bot | Int | Canal donde el bot enviara sus mensajes sobre la cola
-    canalOutputBotID = os.environ["canalOutputBotID"]
+    canalOutputBotID = int(os.environ["canalOutputBotID"])
     # Rangos Mod | [Int] | Ids de los rangos de moderacion que tendran permisos totales
-    rangosMOD = os.environ["rangosMOD"].split(" ")
+    rangosMOD = list(map(int, os.environ["rangosMOD"].split("_")))
 
     # ############################################################### #
 

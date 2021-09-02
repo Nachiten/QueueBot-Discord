@@ -112,7 +112,7 @@ class Cola:
     async def enviarMensajeNext(self, canalOutputBot):
         if self.cantidadDeUsuarios() == 0:
             await canalOutputBot.send(
-                f"No quedan miembros en la cola **{self.nombre}**.")
+                f" No quedan miembros en la cola **{self.nombre}**.")
             return
         else:
             # Calculo los siguientes para printearlos
@@ -122,7 +122,7 @@ class Cola:
             siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
-                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: " \
+                siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
                                                 f"<@{str(self.obtenerSiguienteUsuario().id)}>."
 
             await canalOutputBot.send(
