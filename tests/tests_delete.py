@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.clases.colas import Colas
+from clases.colas import Colas
 
 '''
 # Descipcion: 

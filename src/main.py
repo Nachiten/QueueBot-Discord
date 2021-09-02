@@ -3,17 +3,17 @@ import discord
 from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
-from src.clases.colas import Colas
+from clases.colas import Colas
 
-from src.comandos.comandoCreate import manejarComandoCreate
-from src.comandos.comandoAll import manejarComandoAll
-from src.comandos.comandoAdd import manejarComandoAdd
-from src.comandos.comandoDelete import manejarComandoDelete
-from src.comandos.comandoList import manejarComandoList
-from src.comandos.comandoNext import manejarComandoNext
-from src.comandos.comandoRemove import manejarComandoRemove
-from src.comandos.comandoHelp import manejarComandoHelp
-from src.comandos.comandoPrint import manejarComandoPrint
+from comandos.comandoCreate import manejarComandoCreate
+from comandos.comandoAll import manejarComandoAll
+from comandos.comandoAdd import manejarComandoAdd
+from comandos.comandoDelete import manejarComandoDelete
+from comandos.comandoList import manejarComandoList
+from comandos.comandoNext import manejarComandoNext
+from comandos.comandoRemove import manejarComandoRemove
+from comandos.comandoHelp import manejarComandoHelp
+from comandos.comandoPrint import manejarComandoPrint
 
 # Datos administrativos del bot
 cliente = discord.Client()
