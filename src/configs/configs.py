@@ -4,8 +4,7 @@ class Configs:
 
     # ############################################################### #
 
-    # ### Campos que deben estar seteados como Envarioment (.env) ### #
-    # Ubicacion de .env, esta misma carpeta
+    # ### Campos que deben estar seteados como Environment (bot.env) ### #
 
     # Discord Token | String | Token unico del bot de dicord
     DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
