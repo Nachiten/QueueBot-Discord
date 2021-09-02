@@ -18,4 +18,4 @@ canalOutputBotID=NUMBER
 rangosMOD=RANK1NUMBER_RANK2NUMBER
 ```
 
-Important: None of the field should be between "".
+Important: All the env listed above are required and none of them should be between "".
