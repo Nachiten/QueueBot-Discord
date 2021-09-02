@@ -1,8 +1,8 @@
 import discord
 
-from src.configs.configs import Configs
+from configs.configs import Configs
 
-from src.clases.cola import Cola
+from clases.cola import Cola
 
 imagenThumbnail = Configs.imagenThumbnail
 

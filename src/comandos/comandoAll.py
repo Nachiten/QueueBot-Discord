@@ -1,9 +1,9 @@
-from src.configs.globalVariables import GlobalVariables
-from src.configs.configs import Configs
+from configs.globalVariables import GlobalVariables
+from configs.configs import Configs
 
-from src.utils.utils import esMod
-from src.utils.utils import printearErrorSinPermisos
-from src.clases.colas import Colas
+from utils.utils import esMod
+from utils.utils import printearErrorSinPermisos
+from clases.colas import Colas
 
 comandoAll = Configs.comandoAll
 prefijoBot = Configs.prefijoBot

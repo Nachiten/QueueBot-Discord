@@ -1,11 +1,22 @@
+import os
+
 class Configs:
-    # Canal donde se le enviaran comandos al bot
-    canalSpamComandosID = 862383126885695489
-    # Canal donde el bot enviara sus mensajes sobre la cola
-    canalOutputBotID = 862383158971990036
-    # Ids de los rangos de moderacion que tendran permisos totales
-    # [AyudanteX, AyudanteY]
-    rangosMOD = [863139319719526430, 863139445809086484]
+
+    # ############################################################### #
+
+    # ### Campos que deben estar seteados como Environment (bot.env) ### #
+
+    # Discord Token | String | Token unico del bot de dicord
+    DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
+    # Canal Spam Comandos | Int | Canal donde se le enviaran comandos al bot
+    canalSpamComandosID = int(os.environ["canalSpamComandosID"])
+    # Canal Output Bot | Int | Canal donde el bot enviara sus mensajes sobre la cola
+    canalOutputBotID = int(os.environ["canalOutputBotID"])
+    # Rangos Mod | [Int] | Ids de los rangos de moderacion que tendran permisos totales
+    rangosMOD = list(map(int, os.environ["rangosMOD"].split("_")))
+
+    # ############################################################### #
+
     # Emojis utilizados
     emojis = ['👍', '👎', '➡️', '❌']
     # Como se debe invocar al bot

@@ -1,8 +1,8 @@
-from src.configs.globalVariables import GlobalVariables
-from src.configs.configs import Configs
+from configs.globalVariables import GlobalVariables
+from configs.configs import Configs
 
-from src.clases.colas import Colas
-from src.utils.utils import cantidadDeParametrosEs
+from clases.colas import Colas
+from utils.utils import cantidadDeParametrosEs
 
 
 comandoRemove = Configs.comandoRemove

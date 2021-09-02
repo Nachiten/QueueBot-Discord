@@ -7,6 +7,4 @@ __pycache__/
 # Replit breakpoints
 .breakpoints
 # Enviroment variables
-.env
-# Token variable
-src/configs/discordToken.py
+src/configs/.env

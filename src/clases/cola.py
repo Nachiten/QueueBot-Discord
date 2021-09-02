@@ -1,10 +1,9 @@
 import discord
 
-from src.configs.globalVariables import GlobalVariables
-from src.configs.configs import Configs
+from configs.globalVariables import GlobalVariables
+from configs.configs import Configs
 
-from src.clases.usuario import Usuario
-
+from clases.usuario import Usuario
 
 emojis = Configs.emojis
 imagenThumbnail = Configs.imagenThumbnail
@@ -87,7 +86,8 @@ class Cola:
             miembrosAContinuacion = ""
 
             for index in range(1, len(miembrosCola)):
-                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> | Canal: {miembrosCola[index].canalActual}\n"
+                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> |" \
+                                         f" Canal: {miembrosCola[index].canalActual}\n"
 
         # Creacion de mensaje embed
         mensajeEmbed = discord.Embed(title="Cola " + self.nombre + ":",
@@ -112,7 +112,7 @@ class Cola:
     async def enviarMensajeNext(self, canalOutputBot):
         if self.cantidadDeUsuarios() == 0:
             await canalOutputBot.send(
-                f"No quedan miembros en la cola **{self.nombre}**.")
+                f" No quedan miembros en la cola **{self.nombre}**.")
             return
         else:
             # Calculo los siguientes para printearlos
@@ -122,7 +122,8 @@ class Cola:
             siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
-                siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: <@{str(self.obtenerSiguienteUsuario().id)}>."
+                siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
+                                                f"<@{str(self.obtenerSiguienteUsuario().id)}>."
 
             await canalOutputBot.send(
                 f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"

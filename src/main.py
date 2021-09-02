@@ -1,22 +1,19 @@
-# import os
 import discord
 
-from src.configs.globalVariables import GlobalVariables
+from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
-from src.clases.colas import Colas
+from clases.colas import Colas
 
-from src.comandos.comandoCreate import manejarComandoCreate
-from src.comandos.comandoAll import manejarComandoAll
-from src.comandos.comandoAdd import manejarComandoAdd
-from src.comandos.comandoDelete import manejarComandoDelete
-from src.comandos.comandoList import manejarComandoList
-from src.comandos.comandoNext import manejarComandoNext
-from src.comandos.comandoRemove import manejarComandoRemove
-from src.comandos.comandoHelp import manejarComandoHelp
-from src.comandos.comandoPrint import manejarComandoPrint
-
-from src.configs.discordToken import DISCORD_TOKEN
+from comandos.comandoCreate import manejarComandoCreate
+from comandos.comandoAll import manejarComandoAll
+from comandos.comandoAdd import manejarComandoAdd
+from comandos.comandoDelete import manejarComandoDelete
+from comandos.comandoList import manejarComandoList
+from comandos.comandoNext import manejarComandoNext
+from comandos.comandoRemove import manejarComandoRemove
+from comandos.comandoHelp import manejarComandoHelp
+from comandos.comandoPrint import manejarComandoPrint
 
 # Datos administrativos del bot
 cliente = discord.Client()
@@ -37,14 +34,6 @@ comandoHelp = Configs.comandoHelp
 comandoAll = Configs.comandoAll
 
 canalSpamComandos = None
-
-
-# Saber si un mensaje recibido tiene la sintaxis correcta
-async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
-    if len(mensaje.split(" ", 7)) > 3:
-        await canalSpamComandos.send(
-            f"**[Error]** Ha ocurrido un error al procesar la solicitud de {str(autorMensaje)}. Por favor intente nuevamente."
-        )
 
 
 # Evento de inicializacion
@@ -68,8 +57,7 @@ async def on_ready():
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
     await canalOutputBot.send(
-        "El bot ha sido inicializado correctamente como el usuario **{0.user}**"
-            .format(cliente))
+        "El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
 # Evento de mensaje recibido
@@ -170,5 +158,14 @@ async def on_reaction_add(reaction, user):
         await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
 
 
+# Saber si un mensaje recibido tiene la sintaxis correcta
+async def chequearIntegridadDeMensaje(mensaje, autorMensaje):
+    if len(mensaje.split(" ", 7)) > 3:
+        await canalSpamComandos.send(
+            f"**[Error]** Ha ocurrido un error al procesar la solicitud de {str(autorMensaje)}"
+            f". Por favor intente nuevamente."
+        )
+
+
 # Corre el bot
-cliente.run(DISCORD_TOKEN)
+cliente.run(Configs.DISCORD_TOKEN)

@@ -1,10 +1,10 @@
-from src.configs.globalVariables import GlobalVariables
-from src.configs.configs import Configs
+from configs.globalVariables import GlobalVariables
+from configs.configs import Configs
 
-from src.utils.utils import esMod
-from src.utils.utils import cantidadDeParametrosEs
-from src.utils.utils import printearErrorSinPermisos
-from src.clases.colas import Colas
+from utils.utils import esMod
+from utils.utils import cantidadDeParametrosEs
+from utils.utils import printearErrorSinPermisos
+from clases.colas import Colas
 
 comandoCreate = Configs.comandoCreate
 prefijoBot = Configs.prefijoBot
@@ -32,7 +32,7 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor):
 
     nombreCola = parametrosMensaje[2]
 
-    if (Colas.existeCola(nombreCola)):
+    if Colas.existeCola(nombreCola):
         await canalSpamComandos.send(
             f"Ya existe una cola con el nombre **{nombreCola}**!")
     else:
