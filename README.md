@@ -16,6 +16,7 @@ DISCORD_TOKEN=STRING
 canalSpamComandosID=NUMBER
 canalOutputBotID=NUMBER
 rangosMOD=RANK1NUMBER_RANK2NUMBER
+PYTHONUNBUFFERED=1
 ```
 
 Important: All the env listed above are required and none of them should be between "".
