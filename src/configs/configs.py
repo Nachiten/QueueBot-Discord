@@ -26,7 +26,7 @@ class Configs:
     # ############################################################### #
 
     # Emojis utilizados | Los primeros 4 son para las colas, los otros dos para los mensajes enviados
-    emojis = ['👍', '👎', '➡️', '❌', '✅', '❎']
+    emojis = ['👍', '👎', '➡️', '❌', '✅', '❎', '💥']
     # Como se debe invocar al bot
     prefijoBot = "!queue"
     # Aliases de comandos
