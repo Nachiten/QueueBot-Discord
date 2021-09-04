@@ -2,7 +2,7 @@ from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 # Configs
-rangosMOD = Configs.rangosMOD
+rangosMOD = Configs.RANGOS_MOD
 emojis = Configs.emojis
 imagenThumbnail = Configs.imagenThumbnail
 

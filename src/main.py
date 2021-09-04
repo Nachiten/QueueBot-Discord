@@ -19,8 +19,8 @@ from comandos.comandoPrint import manejarComandoPrint
 cliente = discord.Client()
 
 # Configs
-canalSpamComandosID = Configs.canalSpamComandosID
-canalOutputBotID = Configs.canalOutputBotID
+canalSpamComandosID = Configs.CANAL_OUTPUT_COMANDOS_ID
+canalOutputBotID = Configs.CANAL_OUTPUT_COLAS_ID
 
 prefijoBot = Configs.prefijoBot
 
@@ -32,6 +32,8 @@ comandoAdd = Configs.comandoAdd
 comandoRemove = Configs.comandoRemove
 comandoHelp = Configs.comandoHelp
 comandoAll = Configs.comandoAll
+
+emojis = Configs.emojis
 
 canalSpamComandos = None
 
@@ -105,6 +107,8 @@ async def on_message(message):
         await message.channel.send(
             f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
         )
+
+    # await message.add_reaction(emojis[4])
 
 
 # Evento de reaccion recibida
