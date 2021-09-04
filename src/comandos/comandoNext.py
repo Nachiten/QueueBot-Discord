@@ -16,7 +16,7 @@ async def manejarComandoNext(mensaje, autorMensaje):
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoNext)
-        return
+        return False
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
     canalOutputBot = GlobalVariables.canalOutputBot
@@ -28,11 +28,13 @@ async def manejarComandoNext(mensaje, autorMensaje):
         await canalSpamComandos.send(
             f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoNext} nombreCola`."
         )
-        return
+        return False
 
     nombreCola = parametrosMensaje[2]
 
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
-    else:
-        await Colas.enviarMensajeNextEnCola(nombreCola, canalOutputBot)
+        return False
+
+    await Colas.enviarMensajeNextEnCola(nombreCola, canalOutputBot)
+    return True

@@ -149,9 +149,10 @@ class Cola:
         # Envio y registro el mensaje enviado
         self.mensajeEnviado = await canalOutputBot.send(embed=embedCompleto)
 
-        # Reacciono con emojis para que el resto pueda hacerlo
-        for emoji in emojis:
-            await self.mensajeEnviado.add_reaction(emoji)
+        # Recorro los primeros 4 emojis
+        for emojiIndex in range(0, 4):
+            # El bot reacciona con el emoji correspondiente
+            await self.mensajeEnviado.add_reaction(emojis[emojiIndex])
 
     # Actualizar el mensaje existente sobre la cola
     async def actualizarMensajeExistente(self):
