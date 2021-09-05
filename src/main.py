@@ -1,4 +1,5 @@
 import discord
+import traceback
 
 from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
@@ -118,11 +119,14 @@ async def on_message(message):
             await message.add_reaction(emojis[4])
         else:
             await message.add_reaction(emojis[5])
-    except:
+    except Exception as e:
         await message.add_reaction(emojis[6])
         await message.channel.send(
             f"{tagAlAutor} Ha ocurrido un error inesperado procesando tu mensaje. Por favor vuelve a intentarlo."
         )
+        print(f"Exception: {str(e)}")
+        tb = traceback.format_exc()
+        print(tb)
         pass
 
 
