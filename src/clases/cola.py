@@ -128,7 +128,7 @@ class Cola:
                                                 f"{self.obtenerSiguienteUsuario()}."
 
             await canalOutputBot.send(
-                f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"
+                f"{siguienteEnLaLista} es tu turno en el canal **{siguienteUsuario.canalActual}**, cola"
                 f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
             )
             await self.actualizarMensajeExistente()
