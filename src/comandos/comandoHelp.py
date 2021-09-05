@@ -12,6 +12,7 @@ COMANDO_LIST = Configs.comandoList
 COMANDO_ALL = Configs.comandoAll
 COMANDO_CREATE = Configs.comandoCreate
 imagenThumbnail = Configs.imagenThumbnail
+emojis = Configs.emojis
 
 
 def generarMensajeEmbed():
@@ -19,7 +20,7 @@ def generarMensajeEmbed():
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
                                  color=discord.Color.purple())
     mensajeEmbed.set_thumbnail(url=imagenThumbnail)
-    mensajeEmbed.add_field(name="Comandos para todos:",
+    mensajeEmbed.add_field(name="Comandos para Alumnos:",
                            value=f'''
                            {PREFIX} {COMANDO_ADD} unaCola | Agregarse a una cola
                            {PREFIX} {COMANDO_REMOVE} unaCola | Quitarse de una cola
@@ -36,7 +37,7 @@ def generarMensajeEmbed():
                            inline=False)
     mensajeEmbed.add_field(
         name="Emojis:",
-        value="[👍] add | [👎] remove | [➡️] next | [❌] delete",
+        value=f"[{emojis[0]}] add | [{emojis[1]}] remove | [{emojis[2]}] next | [{emojis[3]}] delete",
         inline=False)
     mensajeEmbed.set_footer(
         text=
