@@ -7,4 +7,4 @@ __pycache__/
 # Replit breakpoints
 .breakpoints
 # Enviroment variables
-src/configs/.env
+bot.env

@@ -12,7 +12,7 @@ def obtenerRangos(envVar):
 class Configs:
     # ############################################################### #
 
-    # ### Campos que deben estar seteados como Environment (bot.env) ### #
+    # ### Campos que deben estar seteados como Environment (bot.env.example) ### #
 
     # Discord Token | String | Token unico del bot de dicord
     DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
