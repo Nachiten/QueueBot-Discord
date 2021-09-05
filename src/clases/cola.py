@@ -29,6 +29,9 @@ class Cola:
             canalDeUsuario = "CanalNoValido"
             print("[ERROR] No deberia llegar un canal no valido a esta instancia")
 
+        if canalActual == "n/a":
+            canalDeUsuario = "n/a"
+
         self.usuarios.append(Usuario(usuario, str(canalDeUsuario)))
 
     # Quitar un usuario de la cola
@@ -37,19 +40,18 @@ class Cola:
 
     # Saber si existre un usuario dado
     def existeUsuario(self, usuario):
-        return usuario in map(lambda unUsuario: unUsuario.objetoUsuario,
-                              self.usuarios)
+        return usuario.name in map(lambda unUsuario: unUsuario.getUsuarioName(), self.usuarios)
 
     # Obtener un usuario por nombre
     def obtenerUsuario(self, usuario):
         return list(
-            filter(lambda unUsuario: unUsuario.objetoUsuario == usuario,
+            filter(lambda unUsuario: unUsuario.usuario == usuario,
                    self.usuarios))[0]
 
     def obtenerListaDeUsuarios(self):
         mensaje = ""
         for unUsuario in self.usuarios:
-            mensaje += f"Nombre: {unUsuario.objetoUsuario.name}\n"
+            mensaje += f"Nombre: {unUsuario.getUsuarioName()}\n"
         return mensaje
 
     # Cantidad total de usuarios
@@ -62,7 +64,7 @@ class Cola:
 
     # Solo leer sin tocar el siguiente de la cola
     def obtenerSiguienteUsuario(self):
-        return self.usuarios[0].objetoUsuario
+        return self.usuarios[0].getTagUsuario()
 
     # Saber si un mensaje pertenece a esta cola
     def perteneceElMensaje(self, mensaje):
@@ -79,14 +81,14 @@ class Cola:
 
         # Si hay al menos un miembro, fijo el primero de la cola
         if len(miembrosCola) > 0:
-            siguienteMiembro = f"1) <@{str(miembrosCola[0].objetoUsuario.id)}> | Canal: {miembrosCola[0].canalActual}"
+            siguienteMiembro = f"1) {miembrosCola[0].getTagUsuario()} | Canal: {miembrosCola[0].canalActual}"
 
         # Si hay mas de un miembro, fijo los a continuacion
         if len(miembrosCola) > 1:
             miembrosAContinuacion = ""
 
             for index in range(1, len(miembrosCola)):
-                miembrosAContinuacion += f"{str(index + 1)}) <@{str(miembrosCola[index].objetoUsuario.id)}> |" \
+                miembrosAContinuacion += f"{str(index + 1)}) {miembrosCola[index].getTagUsuario()} |" \
                                          f" Canal: {miembrosCola[index].canalActual}\n"
 
         # Creacion de mensaje embed
@@ -118,12 +120,12 @@ class Cola:
             # Calculo los siguientes para printearlos
             siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
 
-            siguienteEnLaLista = f"<@{str(siguienteUsuario.objetoUsuario.id)}>"
-            siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
+            siguienteEnLaLista = siguienteUsuario.getTagUsuario()
+            siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
 
             if self.cantidadDeUsuarios() >= 1:
                 siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
-                                                f"<@{str(self.obtenerSiguienteUsuario().id)}>."
+                                                f"{self.obtenerSiguienteUsuario()}."
 
             await canalOutputBot.send(
                 f"{siguienteEnLaLista} es tu turno en canal **{siguienteUsuario.canalActual}** en la cola"
