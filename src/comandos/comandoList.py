@@ -17,7 +17,7 @@ async def manejarComandoList(mensaje, autorMensaje):
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoList)
-        return
+        return False
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
@@ -28,11 +28,14 @@ async def manejarComandoList(mensaje, autorMensaje):
         await canalSpamComandos.send(
             f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoList} nombreCola`"
         )
-        return
+        return False
 
     nombreCola = parametrosMensaje[2]
 
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
-    else:
-        await Colas.enviarMensajeNuevoEnCola(nombreCola)
+        return False
+
+    await Colas.enviarMensajeNuevoEnCola(nombreCola)
+
+    return True

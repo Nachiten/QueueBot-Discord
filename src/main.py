@@ -1,4 +1,5 @@
 import discord
+import traceback
 
 from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
@@ -19,8 +20,8 @@ from comandos.comandoPrint import manejarComandoPrint
 cliente = discord.Client()
 
 # Configs
-canalSpamComandosID = Configs.canalSpamComandosID
-canalOutputBotID = Configs.canalOutputBotID
+canalOutputComandosID = Configs.CANAL_OUTPUT_COMANDOS_ID
+canalOutputColasID = Configs.CANAL_OUTPUT_COLAS_ID
 
 prefijoBot = Configs.prefijoBot
 
@@ -33,30 +34,33 @@ comandoRemove = Configs.comandoRemove
 comandoHelp = Configs.comandoHelp
 comandoAll = Configs.comandoAll
 
-canalSpamComandos = None
+emojis = Configs.emojis
 
+canalSpamComandos = None
+canalOutputColas = None
 
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
     global canalSpamComandos
+    global canalOutputColas
 
     # Cargo los canales donde el bot hablara
-    canalOutputBot = cliente.get_channel(canalOutputBotID)
-    canalSpamComandos = cliente.get_channel(canalSpamComandosID)
+    canalOutputColas = cliente.get_channel(canalOutputColasID)
+    canalSpamComandos = cliente.get_channel(canalOutputComandosID)
 
     # Seteo variables globales
-    GlobalVariables.canalOutputBot = canalOutputBot
+    GlobalVariables.canalOutputBot = canalOutputColas
     GlobalVariables.canalSpamComandos = canalSpamComandos
 
     if canalSpamComandos is None:
         print("[ERROR] No se pudo encontrar el canal 'canalSpamComandos'")
-    if canalOutputBot is None:
+    if canalOutputColas is None:
         print("[ERROR] No se pudo encontrar el canal 'canalOutputBot'")
 
     print('[Info] El bot ha sido cargado como el usurio: {0.user}'.format(
         cliente))
-    await canalOutputBot.send(
+    await canalSpamComandos.send(
         "El bot ha sido inicializado correctamente como el usuario **{0.user}**".format(cliente))
 
 
@@ -66,14 +70,9 @@ async def on_message(message):
     mensajeSeparado = message.content.split(" ", 5)
 
     # Si el mensaje es enviado por el bot, o no esta presente el prefijo
+    # Es importantisimo que este checkeo este antes de entrar al try, porque si llega a fallar aca,
+    # genera un bucle infinito (cada mensaje que manda vuelve a entrar en el catch infinitamente)
     if message.author == cliente.user or not mensajeSeparado[0] == prefijoBot:
-        return
-
-    # Si no inserto ningun segundo parametro
-    if len(mensajeSeparado) == 1:
-        await message.channel.send(
-            f"Debes insertar algun comando. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
-        )
         return
 
     # Variables necesarias
@@ -83,28 +82,52 @@ async def on_message(message):
 
     print("[Mensaje recibido] " + mensaje)
 
-    if mensajeSeparado[1] == comandoCreate:
-        await manejarComandoCreate(mensaje, autorMensaje, tagAlAutor)
-    elif mensajeSeparado[1] == comandoList:
-        await manejarComandoList(mensaje, autorMensaje)
-    elif mensajeSeparado[1] == comandoNext:
-        await manejarComandoNext(mensaje, autorMensaje)
-    elif mensajeSeparado[1] == comandoDelete:
-        await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
-    elif mensajeSeparado[1] == comandoAdd:
-        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, message.author.voice)
-    elif mensajeSeparado[1] == comandoRemove:
-        await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
-    elif mensajeSeparado[1] == comandoHelp:
-        await manejarComandoHelp()
-    elif mensajeSeparado[1] == comandoAll:
-        await manejarComandoAll(autorMensaje)
-    elif mensajeSeparado[1] == "print":
-        await manejarComandoPrint(autorMensaje)
-    else:
+    try:
+        # Si no inserto ningun segundo parametro
+        if len(mensajeSeparado) == 1:
+            await message.channel.send(
+                f"Debes insertar algun comando. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
+            )
+            return
+
+        mensajeProcesadoConExito = False
+
+        if mensajeSeparado[1] == comandoCreate:
+            mensajeProcesadoConExito = await manejarComandoCreate(mensaje, autorMensaje, tagAlAutor)
+        elif mensajeSeparado[1] == comandoList:
+            mensajeProcesadoConExito = await manejarComandoList(mensaje, autorMensaje)
+        elif mensajeSeparado[1] == comandoNext:
+            mensajeProcesadoConExito = await manejarComandoNext(mensaje, autorMensaje)
+        elif mensajeSeparado[1] == comandoDelete:
+            mensajeProcesadoConExito = await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
+        elif mensajeSeparado[1] == comandoAdd:
+            mensajeProcesadoConExito = await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, message.author.voice)
+        elif mensajeSeparado[1] == comandoRemove:
+            mensajeProcesadoConExito = await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
+        elif mensajeSeparado[1] == comandoHelp:
+            mensajeProcesadoConExito = await manejarComandoHelp()
+        elif mensajeSeparado[1] == comandoAll:
+            mensajeProcesadoConExito = await manejarComandoAll(autorMensaje)
+        elif mensajeSeparado[1] == "print":
+            mensajeProcesadoConExito = await manejarComandoPrint(autorMensaje)
+        else:
+            await message.channel.send(
+                f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
+            )
+
+        if mensajeProcesadoConExito:
+            await message.add_reaction(emojis[4])
+        else:
+            await message.add_reaction(emojis[5])
+    except Exception as e:
+        await message.add_reaction(emojis[6])
         await message.channel.send(
-            f"Comando no existente. Usa `{prefijoBot} {comandoHelp}` para una lista de comandos."
+            f"{tagAlAutor} Ha ocurrido un error inesperado procesando tu mensaje. Por favor vuelve a intentarlo."
         )
+        print(f"Exception: {str(e)}")
+        tb = traceback.format_exc()
+        print(tb)
+        pass
 
 
 # Evento de reaccion recibida
@@ -112,50 +135,59 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     # No hago nada con cualquier reaccion hecha por el bot
     # Y Chequeo si la reaccion es a un mensaje enviado por el bot
-    if user == cliente.user or not Colas.esAlgunaReaccionDeCola(
-            reaction.message):
+    if user == cliente.user or not Colas.esAlgunaReaccionDeCola(reaction.message):
         return
 
-    mensaje = prefijoBot + " "
-    autorMensaje = user
-    tagAlAutor = "<@" + str(autorMensaje.id) + ">"
+    try:
+        mensaje = prefijoBot + " "
+        autorMensaje = user
+        tagAlAutor = "<@" + str(autorMensaje.id) + ">"
 
-    # Variables necesarias
-    nombreCola = reaction.message.embeds[0].title.split(" ",
-                                                        2)[1].split(":", 1)[0]
-    emoji = reaction.emoji
+        # Variables necesarias
+        nombreCola = reaction.message.embeds[0].title.split(" ",
+                                                            2)[1].split(":", 1)[0]
+        emoji = reaction.emoji
 
-    # Remuevo la reaccion generada por el usuario
-    await reaction.remove(user)
+        # Remuevo la reaccion generada por el usuario
+        await reaction.remove(user)
 
-    if emoji == '👍':
-        mensaje += comandoAdd + " " + nombreCola
+        # Pulgar arriba
+        if emoji == emojis[0]:
+            mensaje += comandoAdd + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
-        print("[Add] " + mensaje)
+            await chequearIntegridadDeMensaje(mensaje, autorMensaje)
+            print("[Add] " + mensaje)
 
-        await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, user.voice)
-    elif emoji == '👎':
-        mensaje += comandoRemove + " " + nombreCola
+            await manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, user.voice)
+        # Pulgar abajo
+        elif emoji == emojis[1]:
+            mensaje += comandoRemove + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
-        print("[Remove] " + mensaje)
+            await chequearIntegridadDeMensaje(mensaje, autorMensaje)
+            print("[Remove] " + mensaje)
 
-        await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
-    elif emoji == '➡️':
-        mensaje += comandoNext + " " + nombreCola
+            await manejarComandoRemove(mensaje, autorMensaje, tagAlAutor)
+        # Flecha hacia derecha
+        elif emoji == emojis[2]:
+            mensaje += comandoNext + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
-        print("[Next] " + mensaje)
+            await chequearIntegridadDeMensaje(mensaje, autorMensaje)
+            print("[Next] " + mensaje)
 
-        await manejarComandoNext(mensaje, autorMensaje)
-    elif emoji == '❌':
-        mensaje += comandoDelete + " " + nombreCola
+            await manejarComandoNext(mensaje, autorMensaje)
+        # Cruz roja
+        elif emoji == emojis[3]:
+            mensaje += comandoDelete + " " + nombreCola
 
-        await chequearIntegridadDeMensaje(mensaje, autorMensaje)
-        print("[Delete] " + mensaje)
+            await chequearIntegridadDeMensaje(mensaje, autorMensaje)
+            print("[Delete] " + mensaje)
 
-        await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
+            await manejarComandoDelete(mensaje, autorMensaje, tagAlAutor)
+    except:
+        await canalOutputColas.send(
+            f"<@{str(user.id)}> Ha ocurrido un error inesperado procesando tu mensaje. Por favor vuelve a intentarlo."
+        )
+        pass
 
 
 # Saber si un mensaje recibido tiene la sintaxis correcta

@@ -21,18 +21,22 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor):
         await canalSpamComandos.send(
             f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoRemove} nombreCola`."
         )
-        return
+        return False
 
     nombreCola = parametrosMensaje[2]
 
     if not Colas.existeCola(nombreCola):
         await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
-    else:
-        if not Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
-            await canalSpamComandos.send(
-                f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
-        else:
-            Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
-            await canalSpamComandos.send(
-                f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
-            await Colas.actualizarMensajeExistenteEnCola(nombreCola)
+        return False
+
+    if not Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
+        await canalSpamComandos.send(
+            f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
+        return False
+
+    Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
+    await canalSpamComandos.send(
+        f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
+    await Colas.actualizarMensajeExistenteEnCola(nombreCola)
+
+    return True

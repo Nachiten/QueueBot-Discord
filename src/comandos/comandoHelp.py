@@ -54,3 +54,5 @@ async def manejarComandoHelp():
     mensajeEmbed = generarMensajeEmbed()
 
     await canalSpamComandos.send(embed=mensajeEmbed)
+
+    return True

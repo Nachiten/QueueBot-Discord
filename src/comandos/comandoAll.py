@@ -17,10 +17,12 @@ async def manejarComandoAll(autorMensaje):
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoAll)
-        return
+        return False
 
     canalSpamComandos = GlobalVariables.canalSpamComandos
 
     mensajeEmbed = Colas.generarMensajeListandoColas()
 
     await canalSpamComandos.send(embed=mensajeEmbed)
+
+    return True

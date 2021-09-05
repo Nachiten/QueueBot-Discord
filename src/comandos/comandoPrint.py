@@ -13,6 +13,8 @@ async def manejarComandoPrint(autorMensaje):
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoPrint)
-        return
+        return False
 
     await Colas.printeameLasColas(canalSpamComandos)
+
+    return True
