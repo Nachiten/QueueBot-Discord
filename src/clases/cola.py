@@ -1,6 +1,5 @@
 import discord
 
-from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 from clases.usuario import Usuario
@@ -13,13 +12,15 @@ imagenThumbnail = Configs.imagenThumbnail
 class Cola:
 
     # Constructor
-    def __init__(self, nombreCola):
+    def __init__(self, nombreCola, canalMensaje):
         # Nombre de la cola
         self.nombre = nombreCola
         # Lista de usuarios en la cola
         self.usuarios = []
         # Mensaje enviado de la cola
         self.mensajeEnviado = None
+        # Canal donde se debe enviar el mensaje
+        self.canalMensaje = canalMensaje
 
     # Agregar un usuario a la cola
     def agregarUsuario(self, usuario, canalActual):
@@ -111,32 +112,30 @@ class Cola:
     # --- Son async porque envian mensajes ---
 
     # Enviar el mensaje sobre el siguiente turno
-    async def enviarMensajeNext(self, canalOutputBot):
+    async def enviarMensajeNext(self):
         if self.cantidadDeUsuarios() == 0:
-            await canalOutputBot.send(
+            await self.canalMensaje.send(
                 f" No quedan miembros en la cola **{self.nombre}**.")
             return
-        else:
-            # Calculo los siguientes para printearlos
-            siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
 
-            siguienteEnLaLista = siguienteUsuario.getTagUsuario()
-            siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
+        # Calculo los siguientes para printearlos
+        siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
 
-            if self.cantidadDeUsuarios() >= 1:
-                siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
-                                                f"{self.obtenerSiguienteUsuario()}."
+        siguienteEnLaLista = siguienteUsuario.getTagUsuario()
+        siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
 
-            await canalOutputBot.send(
-                f"{siguienteEnLaLista} es tu turno en el canal **{siguienteUsuario.canalActual}**, cola"
-                f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
-            )
-            await self.actualizarMensajeExistente()
+        if self.cantidadDeUsuarios() >= 1:
+            siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
+                                            f"{self.obtenerSiguienteUsuario()}."
+
+        await self.canalMensaje.send(
+            f"{siguienteEnLaLista} es tu turno en el canal **{siguienteUsuario.canalActual}**, cola"
+            f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
+        )
+        await self.actualizarMensajeExistente()
 
     # Enviar un mensaje nuevo sobre la cola
     async def enviarMensajeNuevo(self):
-        canalOutputBot = GlobalVariables.canalOutputBot
-
         # Genero embed a enviar
         embedCompleto = self.generarMensajeEmbed()
 
@@ -149,7 +148,7 @@ class Cola:
             await mensajeDeCola.delete()
 
         # Envio y registro el mensaje enviado
-        self.mensajeEnviado = await canalOutputBot.send(embed=embedCompleto)
+        self.mensajeEnviado = await self.canalMensaje.send(embed=embedCompleto)
 
         # Recorro los primeros 4 emojis
         for emojiIndex in range(0, 4):

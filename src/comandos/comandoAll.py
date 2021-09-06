@@ -12,14 +12,14 @@ imagenThumbnail = Configs.imagenThumbnail
 
 # Description: Mostrar todas las colas existentes
 # Access: Only Mods
-async def manejarComandoAll(autorMensaje):
+async def manejarComandoAll(autorMensaje, channel):
 
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoAll)
+        await printearErrorSinPermisos(autorMensaje, comandoAll, channel)
         return False
 
-    canalSpamComandos = GlobalVariables.canalSpamComandos
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     mensajeEmbed = Colas.generarMensajeListandoColas()
 

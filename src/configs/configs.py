@@ -18,8 +18,6 @@ class Configs:
     DISCORD_TOKEN = os.environ["DISCORD_TOKEN"]
     # Canal Spam Comandos | Int | Canal donde el bot hace output de los comandos recibidos
     CANAL_OUTPUT_COMANDOS_ID = obtenerCanal("CANAL_OUTPUT_COMANDOS_ID")
-    # Canal Output Bot | Int | Canal donde el bot envia la informacion sobre las colas
-    CANAL_OUTPUT_COLAS_ID = obtenerCanal("CANAL_OUTPUT_COLAS_ID")
     # Rangos Mod | [Int] | IDs de los rangos de moderacion que tendran permisos totales
     RANGOS_MOD = obtenerRangos("RANGOS_MOD")
 

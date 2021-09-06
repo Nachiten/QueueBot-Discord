@@ -30,8 +30,8 @@ class Colas:
 
     # Agregar una nueva cola
     @classmethod
-    def agregarCola(cls, nombreCola):
-        cls.colasActuales.append(Cola(nombreCola))
+    def agregarCola(cls, nombreCola, canalEnviado):
+        cls.colasActuales.append(Cola(nombreCola, canalEnviado))
 
     # Quitar una cola existente
     @classmethod
@@ -106,6 +106,5 @@ class Colas:
         await cls.getColaPorNombre(nombreCola).eliminarMensaje()
 
     @classmethod
-    async def enviarMensajeNextEnCola(cls, nombreCola, canalOutputBot):
-        await cls.getColaPorNombre(nombreCola).enviarMensajeNext(
-            canalOutputBot)
+    async def enviarMensajeNextEnCola(cls, nombreCola):
+        await cls.getColaPorNombre(nombreCola).enviarMensajeNext()
