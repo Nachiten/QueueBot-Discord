@@ -51,7 +51,7 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState, chann
     # No esta en ningun canal de voz y el nombre no viene escrito
     if voiceState is None and not tieneNombreEscrito:
         await channel.send(
-            f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de soporte!")
+            f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de voz!")
         return False
 
     # El nombre viene dado en el mensaje
