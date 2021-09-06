@@ -135,7 +135,10 @@ class Cola:
         await self.actualizarMensajeExistente()
 
     # Enviar un mensaje nuevo sobre la cola
-    async def enviarMensajeNuevo(self):
+    async def enviarMensajeNuevo(self, channel):
+        # Fijo el canal del mensaje al que me enviaron
+        self.canalMensaje = channel
+
         # Genero embed a enviar
         embedCompleto = self.generarMensajeEmbed()
 

@@ -33,6 +33,6 @@ async def manejarComandoList(mensaje, autorMensaje, channel):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
 
-    await Colas.enviarMensajeNuevoEnCola(nombreCola)
+    await Colas.enviarMensajeNuevoEnCola(nombreCola, channel)
 
     return True

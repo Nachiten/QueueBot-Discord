@@ -40,6 +40,6 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor, channel):
     await canalSpamComandos.send(
         f"{tagAlAutor} ha creado la cola **{str(nombreCola)}**."
     )
-    await Colas.enviarMensajeNuevoEnCola(nombreCola)
+    await Colas.enviarMensajeNuevoEnCola(nombreCola, channel)
 
     return True

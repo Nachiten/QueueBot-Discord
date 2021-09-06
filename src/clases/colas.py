@@ -94,8 +94,8 @@ class Colas:
     # --- Son awaited porque envian mensajes ---
 
     @classmethod
-    async def enviarMensajeNuevoEnCola(cls, nombreCola):
-        await cls.getColaPorNombre(nombreCola).enviarMensajeNuevo()
+    async def enviarMensajeNuevoEnCola(cls, nombreCola, channel):
+        await cls.getColaPorNombre(nombreCola).enviarMensajeNuevo(channel)
 
     @classmethod
     async def actualizarMensajeExistenteEnCola(cls, nombreCola):
