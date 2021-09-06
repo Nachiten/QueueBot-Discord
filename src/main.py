@@ -39,6 +39,7 @@ emojis = Configs.emojis
 canalSpamComandos = None
 canalOutputColas = None
 
+
 # Evento de inicializacion
 @cliente.event
 async def on_ready():
