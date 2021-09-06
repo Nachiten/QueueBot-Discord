@@ -1,4 +1,3 @@
-from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 from utils.utils import esMod
@@ -12,20 +11,17 @@ prefijoBot = Configs.prefijoBot
 
 # Description: Atender siguiente persona en una cola
 # Access: Only Mods
-async def manejarComandoNext(mensaje, autorMensaje):
+async def manejarComandoNext(mensaje, autorMensaje, channel):
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoNext)
+        await printearErrorSinPermisos(autorMensaje, comandoNext, channel)
         return False
-
-    canalSpamComandos = GlobalVariables.canalSpamComandos
-    canalOutputBot = GlobalVariables.canalOutputBot
 
     parametrosMensaje = mensaje.split(" ", 5)
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(
+        await channel.send(
             f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoNext} nombreCola`."
         )
         return False
@@ -33,8 +29,8 @@ async def manejarComandoNext(mensaje, autorMensaje):
     nombreCola = parametrosMensaje[2]
 
     if not Colas.existeCola(nombreCola):
-        await canalSpamComandos.send(f"No existe la cola **{nombreCola}**!")
+        await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
 
-    await Colas.enviarMensajeNextEnCola(nombreCola, canalOutputBot)
+    await Colas.enviarMensajeNextEnCola(nombreCola)
     return True

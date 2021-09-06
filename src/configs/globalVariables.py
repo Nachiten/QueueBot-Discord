@@ -1,3 +1,3 @@
 class GlobalVariables:
-    canalOutputBot = None
-    canalSpamComandos = None
+    # canalOutputBot = None
+    canalOutputComandos = None

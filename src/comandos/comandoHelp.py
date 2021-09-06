@@ -1,6 +1,5 @@
 import discord
 
-from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 PREFIX = Configs.prefijoBot
@@ -15,7 +14,7 @@ imagenThumbnail = Configs.imagenThumbnail
 emojis = Configs.emojis
 
 
-def generarMensajeEmbed():
+def generarMensajeEmbedHelp():
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
                                  color=discord.Color.purple())
@@ -49,11 +48,10 @@ def generarMensajeEmbed():
 
 # Description: Mostrar mensaje de ayuda
 # Access: Everyone
-async def manejarComandoHelp():
-    canalSpamComandos = GlobalVariables.canalSpamComandos
+async def manejarComandoHelp(channel):
 
-    mensajeEmbed = generarMensajeEmbed()
+    mensajeEmbed = generarMensajeEmbedHelp()
 
-    await canalSpamComandos.send(embed=mensajeEmbed)
+    await channel.send(embed=mensajeEmbed)
 
     return True

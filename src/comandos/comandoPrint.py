@@ -7,12 +7,12 @@ from utils.utils import printearErrorSinPermisos
 comandoPrint = "print"
 
 
-async def manejarComandoPrint(autorMensaje):
-    canalSpamComandos = GlobalVariables.canalSpamComandos
+async def manejarComandoPrint(autorMensaje, channel):
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoPrint)
+        await printearErrorSinPermisos(autorMensaje, comandoPrint, channel)
         return False
 
     await Colas.printeameLasColas(canalSpamComandos)
