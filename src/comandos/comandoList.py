@@ -34,5 +34,4 @@ async def manejarComandoList(mensaje, autorMensaje, channel):
         return False
 
     await Colas.enviarMensajeNuevoEnCola(nombreCola, channel)
-
     return True

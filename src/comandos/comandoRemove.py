@@ -44,30 +44,33 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor, channel):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
 
-    # Estoy agregando a quien mando el mensaje y no esta en la cola
+    # Estoy queriendo quitar alguien que no esta en la cola
     if not Colas.existeUsuarioEnCola(autorMensaje, nombreCola) and not tieneNombreEscrito:
         await channel.send(
             f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
         return False
 
-    # El nombre viene como string
-    if not tieneNombreEscrito:
-        Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
-        await canalSpamComandos.send(
-            f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
-    # Se agrega a la persona que envio el mensaje
-    else:
+    if tieneNombreEscrito:
+        # Se trata de quitar a la persona pasada como string por parametro
         quitadoSatisfactorio = Colas.quitarUsuarioPorStringDeCola(nombreEscrito, nombreCola)
 
-        # Pude quitar el usuario porque existia
-        if quitadoSatisfactorio:
-            await canalSpamComandos.send(
-                f"{nombreEscrito} ha sido quitado de la cola **{nombreCola}**.")
-            await Colas.actualizarMensajeExistenteEnCola(nombreCola)
-            return True
         # No existia el usuario
-        else:
+        if not quitadoSatisfactorio:
             await channel.send(
-                f"{nombreEscrito} no existe en la cola **{nombreCola}**.")
+                f"**{nombreEscrito}** no existe en la cola **{nombreCola}**!")
             await Colas.actualizarMensajeExistenteEnCola(nombreCola)
             return False
+
+        # Pude quitar el usuario porque existia
+        await canalSpamComandos.send(
+            f"**{nombreEscrito}** ha sido quitado de la cola **{nombreCola}**.")
+        await Colas.actualizarMensajeExistenteEnCola(nombreCola)
+        return True
+
+    # Se quita a la persona que envio el mensaje
+    Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
+    await canalSpamComandos.send(
+        f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
+    return True
+
+

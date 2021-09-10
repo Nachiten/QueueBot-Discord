@@ -20,10 +20,13 @@ class Colas:
         if len(cls.colasActuales) > 0:
             mensaje = "```\n"
 
+        index = 0
+
         for unaCola in cls.colasActuales:
-            mensaje += f"Nombre Cola: {unaCola.nombre}\n"
-            mensaje += f"Lista de usuarios:\n"
+            mensaje += f"Cola {index}: {unaCola.nombre} | "
+            mensaje += f"Usuarios: "
             mensaje += unaCola.obtenerListaDeUsuarios()
+            index += 1
         mensaje += "\n```"
 
         await canalSpamComandos.send(mensaje)
@@ -49,8 +52,8 @@ class Colas:
 
     @classmethod
     def generarMensajeListandoColas(cls):
-        nombresColas = "No Hay ninguna cola."
-        cantidadUsuariosColas = "No Hay ninguna cola."
+        nombresColas = "No hay ninguna cola."
+        cantidadUsuariosColas = "n/a"
 
         if len(cls.colasActuales) > 0:
             nombresColas = ""

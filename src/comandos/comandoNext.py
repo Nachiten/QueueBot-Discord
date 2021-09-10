@@ -21,9 +21,7 @@ async def manejarComandoNext(mensaje, autorMensaje, channel):
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await channel.send(
-            f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoNext} nombreCola`."
-        )
+        await channel.send(f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoNext} nombreCola`.")
         return False
 
     nombreCola = parametrosMensaje[2]

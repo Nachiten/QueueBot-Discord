@@ -51,7 +51,6 @@ def generarMensajeEmbedHelp():
 async def manejarComandoHelp(channel):
 
     mensajeEmbed = generarMensajeEmbedHelp()
-
     await channel.send(embed=mensajeEmbed)
 
     return True

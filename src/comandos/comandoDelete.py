@@ -35,10 +35,9 @@ async def manejarComandoDelete(mensaje, autorMensaje, tagAlAutor, channel):
     if not Colas.existeCola(nombreCola):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
-    else:
-        await Colas.eliminarMensajeEnCola(nombreCola)
-        Colas.quitarCola(nombreCola)
-        await canalSpamComandos.send(
-            f"{tagAlAutor} ha eliminado la cola **{nombreCola}**.")
 
-        return True
+    await Colas.eliminarMensajeEnCola(nombreCola)
+    Colas.quitarCola(nombreCola)
+    await canalSpamComandos.send(
+        f"{tagAlAutor} ha eliminado la cola **{nombreCola}**.")
+    return True

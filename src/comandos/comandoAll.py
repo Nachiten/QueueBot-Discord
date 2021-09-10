@@ -19,10 +19,8 @@ async def manejarComandoAll(autorMensaje, channel):
         await printearErrorSinPermisos(autorMensaje, comandoAll, channel)
         return False
 
-    canalSpamComandos = GlobalVariables.canalOutputComandos
-
     mensajeEmbed = Colas.generarMensajeListandoColas()
 
-    await canalSpamComandos.send(embed=mensajeEmbed)
+    await channel.send(embed=mensajeEmbed)
 
     return True

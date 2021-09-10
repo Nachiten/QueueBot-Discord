@@ -41,5 +41,4 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor, channel):
         f"{tagAlAutor} ha creado la cola **{str(nombreCola)}**."
     )
     await Colas.enviarMensajeNuevoEnCola(nombreCola, channel)
-
     return True

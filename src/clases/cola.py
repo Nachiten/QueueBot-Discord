@@ -60,7 +60,7 @@ class Cola:
     def obtenerListaDeUsuarios(self):
         mensaje = ""
         for unUsuario in self.usuarios:
-            mensaje += f"Nombre: {unUsuario.getUsuarioName()}\n"
+            mensaje += f"{unUsuario.getUsuarioName()}, "
         return mensaje
 
     # Cantidad total de usuarios

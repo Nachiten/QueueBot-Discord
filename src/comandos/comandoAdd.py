@@ -58,7 +58,7 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState, chann
     if tieneNombreEscrito:
         Colas.agregarUsuarioACola(nombreEscrito, nombreCola, "n/a")
         await canalSpamComandos.send(
-            f"{nombreEscrito} ha sido agregado a la cola **{nombreCola}**.")
+            f"**{nombreEscrito}** ha sido agregado a la cola **{nombreCola}**.")
     # Se agrega a la persona que envio el mensaje
     else:
         Colas.agregarUsuarioACola(autorMensaje, nombreCola, voiceState.channel)
