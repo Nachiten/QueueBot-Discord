@@ -9,7 +9,7 @@ class Usuario:
     def getTagUsuario(self):
         # El usuario es un string
         if isinstance(self.usuario, str):
-            return self.usuario
+            return f"**{self.usuario}**"
         # El usuario es un objeto al que le puedo sacar el id
         return f"<@{self.usuario.id}>"
 

@@ -12,34 +12,34 @@ prefijoBot = Configs.prefijoBot
 
 # Description: Crea un nueva cola y la agrega a la lista
 # Access: Only Mods
-async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor):
+async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor, channel):
     # Verificacion de mod
     if not esMod(autorMensaje):
-        await printearErrorSinPermisos(autorMensaje, comandoCreate)
+        await printearErrorSinPermisos(autorMensaje, comandoCreate, channel)
         return False
-
-    canalSpamComandos = GlobalVariables.canalSpamComandos
 
     parametrosMensaje = mensaje.split(" ", 5)
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
     if not cantidadDeParametrosEs(3, parametrosMensaje):
-        await canalSpamComandos.send(
+        await channel.send(
             f"Sintaxis incorrecta, uso: `{prefijoBot} {comandoCreate} nombreCola`"
         )
         return False
 
     nombreCola = parametrosMensaje[2]
 
+    # Ya existia la cola
     if Colas.existeCola(nombreCola):
-        await canalSpamComandos.send(
-            f"Ya existe una cola con el nombre **{nombreCola}**!")
+        await channel.send(
+            f"Ya existe la cola **{nombreCola}**!")
         return False
 
-    Colas.agregarCola(nombreCola)
-    await canalSpamComandos.send(
-        f"{tagAlAutor} ha creado una nueva cola llamada: **{str(nombreCola)}**."
-    )
-    await Colas.enviarMensajeNuevoEnCola(nombreCola)
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
+    Colas.agregarCola(nombreCola, channel)
+    await canalSpamComandos.send(
+        f"{tagAlAutor} ha creado la cola **{str(nombreCola)}**."
+    )
+    await Colas.enviarMensajeNuevoEnCola(nombreCola, channel)
     return True

@@ -1,4 +1,3 @@
-from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 # Configs
@@ -23,8 +22,7 @@ def esMod(unUsuario):
 
 
 # Printea error cuando un usuario no tiene permisos para un comando
-async def printearErrorSinPermisos(autorMensaje, nombreComando):
-    canalSpamComandos = GlobalVariables.canalSpamComandos
+async def printearErrorSinPermisos(autorMensaje, nombreComando, channel):
     print("[PermissionError] El usuario " + autorMensaje.name +
           " intento usar el comando " + nombreComando + ".")
-    await canalSpamComandos.send("No tenes permiso para usar este comando.")
+    await channel.send("No tenes permiso para usar este comando.")

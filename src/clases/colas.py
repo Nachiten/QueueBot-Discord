@@ -20,18 +20,21 @@ class Colas:
         if len(cls.colasActuales) > 0:
             mensaje = "```\n"
 
+        index = 0
+
         for unaCola in cls.colasActuales:
-            mensaje += f"Nombre Cola: {unaCola.nombre}\n"
-            mensaje += f"Lista de usuarios:\n"
+            mensaje += f"Cola {index}: {unaCola.nombre} | "
+            mensaje += f"Usuarios: "
             mensaje += unaCola.obtenerListaDeUsuarios()
+            index += 1
         mensaje += "\n```"
 
         await canalSpamComandos.send(mensaje)
 
     # Agregar una nueva cola
     @classmethod
-    def agregarCola(cls, nombreCola):
-        cls.colasActuales.append(Cola(nombreCola))
+    def agregarCola(cls, nombreCola, canalEnviado):
+        cls.colasActuales.append(Cola(nombreCola, canalEnviado))
 
     # Quitar una cola existente
     @classmethod
@@ -49,8 +52,8 @@ class Colas:
 
     @classmethod
     def generarMensajeListandoColas(cls):
-        nombresColas = "No Hay ninguna cola."
-        cantidadUsuariosColas = "No Hay ninguna cola."
+        nombresColas = "No hay ninguna cola."
+        cantidadUsuariosColas = "n/a"
 
         if len(cls.colasActuales) > 0:
             nombresColas = ""
@@ -60,7 +63,7 @@ class Colas:
                 cantidadUsuariosColas += f"{str(unaCola.cantidadDeUsuarios())}\n"
 
         # Creacion de mensaje embed
-        mensajeEmbed = discord.Embed(title="Todas las colas:",
+        mensajeEmbed = discord.Embed(title="Colas existentes:",
                                      color=discord.Color.purple())
         mensajeEmbed.set_thumbnail(url=imagenThumbnail)
         mensajeEmbed.add_field(name="Nombre de Cola",
@@ -81,6 +84,10 @@ class Colas:
         cls.getColaPorNombre(nombreCola).quitarUsuario(usuario)
 
     @classmethod
+    def quitarUsuarioPorStringDeCola(cls, usuario, nombreCola):
+        return cls.getColaPorNombre(nombreCola).quitarUsuarioPorString(usuario)
+
+    @classmethod
     def existeUsuarioEnCola(cls, nombreUsuario, nombreCola):
         return cls.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
 
@@ -94,8 +101,8 @@ class Colas:
     # --- Son awaited porque envian mensajes ---
 
     @classmethod
-    async def enviarMensajeNuevoEnCola(cls, nombreCola):
-        await cls.getColaPorNombre(nombreCola).enviarMensajeNuevo()
+    async def enviarMensajeNuevoEnCola(cls, nombreCola, channel):
+        await cls.getColaPorNombre(nombreCola).enviarMensajeNuevo(channel)
 
     @classmethod
     async def actualizarMensajeExistenteEnCola(cls, nombreCola):
@@ -106,6 +113,7 @@ class Colas:
         await cls.getColaPorNombre(nombreCola).eliminarMensaje()
 
     @classmethod
-    async def enviarMensajeNextEnCola(cls, nombreCola, canalOutputBot):
-        await cls.getColaPorNombre(nombreCola).enviarMensajeNext(
-            canalOutputBot)
+    async def enviarMensajeNextEnCola(cls, nombreCola):
+        await cls.getColaPorNombre(nombreCola).enviarMensajeNext()
+
+
