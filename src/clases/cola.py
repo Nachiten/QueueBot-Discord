@@ -39,15 +39,23 @@ class Cola:
     def quitarUsuario(self, usuario):
         self.usuarios.remove(self.obtenerUsuario(usuario))
 
+    def quitarUsuarioPorString(self, usuario):
+        if self.existeUsuarioPorNombre(usuario):
+            self.quitarUsuario(usuario)
+            return True
+        return False
+
+    # Saber si existre un usuario dado
+    def existeUsuarioPorNombre(self, usuario):
+        return usuario in map(lambda unUsuario: unUsuario.getUsuarioName(), self.usuarios)
+
     # Saber si existre un usuario dado
     def existeUsuario(self, usuario):
         return usuario.name in map(lambda unUsuario: unUsuario.getUsuarioName(), self.usuarios)
 
     # Obtener un usuario por nombre
     def obtenerUsuario(self, usuario):
-        return list(
-            filter(lambda unUsuario: unUsuario.usuario == usuario,
-                   self.usuarios))[0]
+        return list(filter(lambda unUsuario: unUsuario.usuario == usuario, self.usuarios))[0]
 
     def obtenerListaDeUsuarios(self):
         mensaje = ""

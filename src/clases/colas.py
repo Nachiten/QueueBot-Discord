@@ -81,6 +81,10 @@ class Colas:
         cls.getColaPorNombre(nombreCola).quitarUsuario(usuario)
 
     @classmethod
+    def quitarUsuarioPorStringDeCola(cls, usuario, nombreCola):
+        return cls.getColaPorNombre(nombreCola).quitarUsuarioPorString(usuario)
+
+    @classmethod
     def existeUsuarioEnCola(cls, nombreUsuario, nombreCola):
         return cls.getColaPorNombre(nombreCola).existeUsuario(nombreUsuario)
 
@@ -108,3 +112,5 @@ class Colas:
     @classmethod
     async def enviarMensajeNextEnCola(cls, nombreCola):
         await cls.getColaPorNombre(nombreCola).enviarMensajeNext()
+
+
