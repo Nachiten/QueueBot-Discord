@@ -18,8 +18,6 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor, channel):
         await printearErrorSinPermisos(autorMensaje, comandoCreate, channel)
         return False
 
-    canalSpamComandos = GlobalVariables.canalOutputComandos
-
     parametrosMensaje = mensaje.split(" ", 5)
 
     # Solo debe haber tres parametros {!queue}, {create}, {elNombre}
@@ -31,10 +29,13 @@ async def manejarComandoCreate(mensaje, autorMensaje, tagAlAutor, channel):
 
     nombreCola = parametrosMensaje[2]
 
+    # Ya existia la cola
     if Colas.existeCola(nombreCola):
         await channel.send(
             f"Ya existe la cola **{nombreCola}**!")
         return False
+
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     Colas.agregarCola(nombreCola, channel)
     await canalSpamComandos.send(

@@ -14,6 +14,15 @@ imagenThumbnail = Configs.imagenThumbnail
 emojis = Configs.emojis
 
 
+# Description: Mostrar mensaje de ayuda
+# Access: Everyone
+async def manejarComandoHelp(channel):
+    mensajeEmbed = generarMensajeEmbedHelp()
+    await channel.send(embed=mensajeEmbed)
+
+    return True
+
+
 def generarMensajeEmbedHelp():
     # Creacion de mensaje embed
     mensajeEmbed = discord.Embed(title="Lista de comandos:",
@@ -44,13 +53,3 @@ def generarMensajeEmbedHelp():
     )
 
     return mensajeEmbed
-
-
-# Description: Mostrar mensaje de ayuda
-# Access: Everyone
-async def manejarComandoHelp(channel):
-
-    mensajeEmbed = generarMensajeEmbedHelp()
-    await channel.send(embed=mensajeEmbed)
-
-    return True

@@ -13,8 +13,6 @@ prefijoBot = Configs.prefijoBot
 # Description: Agregar una persona a una cola
 # Access: Everyone
 async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState, channel):
-    canalSpamComandos = GlobalVariables.canalOutputComandos
-
     parametrosMensaje = mensaje.split(" ", 5)
 
     tieneNombreEscrito = False
@@ -38,31 +36,37 @@ async def manejarComandoAdd(mensaje, autorMensaje, tagAlAutor, voiceState, chann
 
     nombreCola = parametrosMensaje[2]
 
+    # No existe la cola
     if not Colas.existeCola(nombreCola):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
 
-    # Si ya esta en la cola y el nombre no viene escrito
-    if Colas.existeUsuarioEnCola(autorMensaje, nombreCola) and not tieneNombreEscrito:
-        await channel.send(
-            f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
-        return False
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
-    # No esta en ningun canal de voz y el nombre no viene escrito
-    if voiceState is None and not tieneNombreEscrito:
-        await channel.send(
-            f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de voz!")
-        return False
+    # Estoy agregando a la persona que envio el mensaje
+    if not tieneNombreEscrito:
+        # Si ya esta en la cola
+        if Colas.existeUsuarioEnCola(autorMensaje, nombreCola):
+            await channel.send(
+                f"{tagAlAutor} ya estas en la cola **{nombreCola}**!")
+            return False
 
-    # El nombre viene dado en el mensaje
-    if tieneNombreEscrito:
-        Colas.agregarUsuarioACola(nombreEscrito, nombreCola, "n/a")
-        await canalSpamComandos.send(
-            f"**{nombreEscrito}** ha sido agregado a la cola **{nombreCola}**.")
-    # Se agrega a la persona que envio el mensaje
-    else:
+        # No esta en ningun canal de voz
+        if voiceState is None:
+            await channel.send(
+                f"{tagAlAutor} para unirte a la cola necesitas estar conectado en algun canal de voz!")
+            return False
+
+        # Se agrega a la persona que envio el mensaje
         Colas.agregarUsuarioACola(autorMensaje, nombreCola, voiceState.channel)
         await canalSpamComandos.send(
             f"{tagAlAutor} ha sido agregado a la cola **{nombreCola}**.")
+        await Colas.actualizarMensajeExistenteEnCola(nombreCola)
+        return True
+
+    # El nombre esta pasado como string por parametro
+    Colas.agregarUsuarioACola(nombreEscrito, nombreCola, "n/a")
+    await canalSpamComandos.send(
+        f"**{nombreEscrito}** ha sido agregado a la cola **{nombreCola}**.")
     await Colas.actualizarMensajeExistenteEnCola(nombreCola)
     return True

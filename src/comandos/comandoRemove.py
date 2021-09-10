@@ -14,8 +14,6 @@ prefijoBot = Configs.prefijoBot
 # Description: Eliminar una persona de una cola
 # Access: Everyone
 async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor, channel):
-    canalSpamComandos = GlobalVariables.canalOutputComandos
-
     parametrosMensaje = mensaje.split(" ", 5)
 
     tieneNombreEscrito = False
@@ -49,6 +47,8 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor, channel):
         await channel.send(
             f"{tagAlAutor} no estas en la cola **{nombreCola}**!")
         return False
+
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     if tieneNombreEscrito:
         # Se trata de quitar a la persona pasada como string por parametro

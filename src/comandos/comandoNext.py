@@ -26,6 +26,7 @@ async def manejarComandoNext(mensaje, autorMensaje, channel):
 
     nombreCola = parametrosMensaje[2]
 
+    # No existe la cola
     if not Colas.existeCola(nombreCola):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False

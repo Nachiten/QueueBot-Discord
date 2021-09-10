@@ -13,13 +13,10 @@ prefijoBot = Configs.prefijoBot
 # Description: Eliminar una cola
 # Access: Only Mods
 async def manejarComandoDelete(mensaje, autorMensaje, tagAlAutor, channel):
-
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoDelete, channel)
         return False
-
-    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     parametrosMensaje = mensaje.split(" ", 5)
 
@@ -32,9 +29,12 @@ async def manejarComandoDelete(mensaje, autorMensaje, tagAlAutor, channel):
 
     nombreCola = parametrosMensaje[2]
 
+    # No existia la cola
     if not Colas.existeCola(nombreCola):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
+
+    canalSpamComandos = GlobalVariables.canalOutputComandos
 
     await Colas.eliminarMensajeEnCola(nombreCola)
     Colas.quitarCola(nombreCola)

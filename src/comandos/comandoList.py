@@ -12,7 +12,6 @@ prefijoBot = Configs.prefijoBot
 # Description: Muestra una cola por output-bot
 # Access: Only Mods
 async def manejarComandoList(mensaje, autorMensaje, channel):
-
     # Verificacion de mod
     if not esMod(autorMensaje):
         await printearErrorSinPermisos(autorMensaje, comandoList, channel)
@@ -29,6 +28,7 @@ async def manejarComandoList(mensaje, autorMensaje, channel):
 
     nombreCola = parametrosMensaje[2]
 
+    # No existe la cola
     if not Colas.existeCola(nombreCola):
         await channel.send(f"No existe la cola **{nombreCola}**!")
         return False
