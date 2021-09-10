@@ -58,7 +58,6 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor, channel):
         if not quitadoSatisfactorio:
             await channel.send(
                 f"**{nombreEscrito}** no existe en la cola **{nombreCola}**!")
-            await Colas.actualizarMensajeExistenteEnCola(nombreCola)
             return False
 
         # Pude quitar el usuario porque existia
@@ -71,6 +70,7 @@ async def manejarComandoRemove(mensaje, autorMensaje, tagAlAutor, channel):
     Colas.quitarUsuarioDeCola(autorMensaje, nombreCola)
     await canalSpamComandos.send(
         f"{tagAlAutor} ha sido quitado de la cola **{nombreCola}**.")
+    await Colas.actualizarMensajeExistenteEnCola(nombreCola)
     return True
 
 
