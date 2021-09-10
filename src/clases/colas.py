@@ -60,7 +60,7 @@ class Colas:
                 cantidadUsuariosColas += f"{str(unaCola.cantidadDeUsuarios())}\n"
 
         # Creacion de mensaje embed
-        mensajeEmbed = discord.Embed(title="Todas las colas:",
+        mensajeEmbed = discord.Embed(title="Colas existentes:",
                                      color=discord.Color.purple())
         mensajeEmbed.set_thumbnail(url=imagenThumbnail)
         mensajeEmbed.add_field(name="Nombre de Cola",
