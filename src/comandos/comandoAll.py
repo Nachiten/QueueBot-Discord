@@ -1,4 +1,3 @@
-from configs.globalVariables import GlobalVariables
 from configs.configs import Configs
 
 from utils.utils import esMod

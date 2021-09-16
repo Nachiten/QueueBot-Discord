@@ -19,3 +19,22 @@ class Usuario:
             return self.usuario
         # El usuario es un objeto al que le puedo sacar el nombre
         return self.usuario.name
+
+    # Retorna el string canal actual, o avisa si cambio o lo dejo
+    def getCanalActualString(self):
+        # El usuario es un string
+        if isinstance(self.usuario, str):
+            return ""
+
+        # Se fue del canal donde estaba
+        if self.usuario.voice is None:
+            return f" Estaba en el canal **{self.canalActual}** pero lo **abandono**."
+
+        # Esta en el mismo canal que antes
+        if str(self.usuario.voice.channel) == self.canalActual:
+            return f" Canal **{self.canalActual}**."
+
+        # Cambio de canal hacia otro
+        return f" Cambio de canal hacia **{self.usuario.voice.channel}**."
+
+

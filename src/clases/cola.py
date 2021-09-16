@@ -130,15 +130,15 @@ class Cola:
         siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
 
         siguienteEnLaLista = siguienteUsuario.getTagUsuario()
-        siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
+        siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
         if self.cantidadDeUsuarios() >= 1:
-            siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
+            siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: " \
                                             f"{self.obtenerSiguienteUsuario()}."
 
         await self.canalMensaje.send(
-            f"{siguienteEnLaLista} es tu turno en el canal **{siguienteUsuario.canalActual}**, cola"
-            f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
+            f"{siguienteEnLaLista} es tu turno en la cola **{self.nombre}**.{siguienteUsuario.getCanalActualString()}"
+            f" {siguienteAlSiguienteEnLaLista}"
         )
         await self.actualizarMensajeExistente()
 
