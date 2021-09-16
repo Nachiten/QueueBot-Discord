@@ -45,11 +45,11 @@ class Cola:
             return True
         return False
 
-    # Saber si existre un usuario dado
+    # Saber si existe un usuario dado
     def existeUsuarioPorNombre(self, usuario):
         return usuario in map(lambda unUsuario: unUsuario.getUsuarioName(), self.usuarios)
 
-    # Saber si existre un usuario dado
+    # Saber si existe un usuario dado
     def existeUsuario(self, usuario):
         return usuario.name in map(lambda unUsuario: unUsuario.getUsuarioName(), self.usuarios)
 
@@ -130,15 +130,15 @@ class Cola:
         siguienteUsuario = self.obtenerYQuitarSiguienteUsuario()
 
         siguienteEnLaLista = siguienteUsuario.getTagUsuario()
-        siguienteAlSiguienteEnLaLista = " No hay nadie mas adelante en la cola."
+        siguienteAlSiguienteEnLaLista = "No hay nadie mas adelante en la cola."
 
         if self.cantidadDeUsuarios() >= 1:
-            siguienteAlSiguienteEnLaLista = f" El siguiente en la cola es: " \
+            siguienteAlSiguienteEnLaLista = f"El siguiente en la cola es: " \
                                             f"{self.obtenerSiguienteUsuario()}."
 
         await self.canalMensaje.send(
-            f"{siguienteEnLaLista} es tu turno en el canal **{siguienteUsuario.canalActual}**, cola"
-            f" **{self.nombre}**.{siguienteAlSiguienteEnLaLista}"
+            f"{siguienteEnLaLista} es tu turno en la cola **{self.nombre}**.{siguienteUsuario.getCanalActualString()}"
+            f" {siguienteAlSiguienteEnLaLista}"
         )
         await self.actualizarMensajeExistente()
 
@@ -153,10 +153,13 @@ class Cola:
         # Obtengo mensaje anterior a enviar
         mensajeDeCola = self.mensajeEnviado
 
-        # Checkeo si existe un mensaje anterior
-        if mensajeDeCola is not None:
-            # Lo borro
-            await mensajeDeCola.delete()
+        try:
+            # Checkeo si existe un mensaje anterior
+            if mensajeDeCola is not None:
+                # Lo borro
+                await mensajeDeCola.delete()
+        except Exception:
+            print("No se pudo borrar el mensaje anterior")
 
         # Envio y registro el mensaje enviado
         self.mensajeEnviado = await self.canalMensaje.send(embed=embedCompleto)
@@ -174,10 +177,14 @@ class Cola:
         # Obtengo mensaje anterior a enviar
         mensajeDeCola = self.mensajeEnviado
 
-        # Checkeo que no sea null para evitar excepciones
-        if mensajeDeCola is not None:
-            # Edito el mensaje
-            await mensajeDeCola.edit(embed=embedCompleto)
+        try:
+            # Checkeo que no sea null para evitar excepciones
+            if mensajeDeCola is not None:
+                # Edito el mensaje
+                await mensajeDeCola.edit(embed=embedCompleto)
+        except Exception:
+            print("El mensaje original fue borrado, envio uno nuevo")
+            await self.enviarMensajeNuevo(self.canalMensaje)
 
     # Eliminar el mensaje existente sobre la cola
     async def eliminarMensaje(self):
